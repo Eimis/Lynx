@@ -1,0 +1,258 @@
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clearfix {
+  *zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.affix {
+  position: fixed;
+}
+
+.editlive {
+  padding: 6px;
+  font-size: 14px;
+  line-height: 18px;
+  color: #555;
+  text-align: left;
+  cursor: pointer;
+  background-color: #eee;
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
+  -webkit-transition: background 0.5s;
+     -moz-transition: background 0.5s;
+       -o-transition: background 0.5s;
+          transition: background 0.5s;
+}
+
+.editlive.fixedwidth {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editlive.eph-small {
+  height: 17px;
+  padding: 3px 6px;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.input-prepend.editlive .icon,
+.input-prepend.editlive strong,
+.input-prepend.editlive b {
+  float: left;
+  margin-right: 4px;
+}
+
+.input-append .editlive .icon,
+.input-append .editlive strong,
+.input-append .editlive b {
+  float: right;
+  margin-left: 4px;
+  opacity: 0.5;
+}
+
+.eie-small {
+  height: 17px!important;
+  padding: 3px 6px!important;
+  font-size: 12px!important;
+  line-height: 15px!important;
+}
+
+select.eie-small {
+  height: 25px!important;
+}
+
+.editlive:hover {
+  background: #def!important;
+}
+
+.editlive-text {
+  background: transparent;
+  border: 0;
+}
+
+.btn .editlive {
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 3px;
+}
+
+.btn .editlive:hover {
+  background: transparent!important;
+}
+
+.btn.block {
+  display: block;
+}
+
+.editlive-controls,
+.editlive-controls input {
+  margin-bottom: 0;
+}
+
+.editlive-controls.block .editlive {
+  display: block;
+}
+
+.editlive-controls.inline,
+.editlive-controls.inline .editlive {
+  display: inline-block;
+}
+
+/* bootstrapui.less */
+
+.ui-datepicker {
+  -webkit-box-shadow: 1px 1px 12px #777777;
+     -moz-box-shadow: 1px 1px 12px #777777;
+          box-shadow: 1px 1px 12px #777777;
+}
+
+.ui-autocomplete {
+  max-height: 300px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-box-shadow: 1px 1px 8px #777777;
+     -moz-box-shadow: 1px 1px 8px #777777;
+          box-shadow: 1px 1px 8px #777777;
+}
+
+.editlive-m2m {
+  padding: 0 0 0 4px;
+  margin: 0 0 7px 0;
+  background: transparent;
+  border: 0;
+  *zoom: 1;
+}
+
+.editlive-m2m:before,
+.editlive-m2m:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+
+.editlive-m2m:after {
+  clear: both;
+}
+
+.editlive-m2m i[class^="icon-"] {
+  float: right;
+  margin: 2px 4px 0 0;
+}
+
+.editlive-m2m li {
+  padding: 3px 0;
+  margin: 0;
+  list-style: none;
+  border-bottom: 1px dashed #ccc;
+}
+
+.editlive-m2m li:last-child {
+  border: 0;
+}
+
+.editlive-m2m li:hover {
+  background: #def;
+}
+
+.editlive-m2m:hover {
+  background: transparent!important;
+}
+
+.editlive-m2m + input {
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+}
+
+.editlive-m2m + input:focus {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+
+.ui-datepicker-trigger {
+  display: none;
+}
+
+.editlive-controls .input-prepend,
+.editlive-controls .input-append {
+  margin-bottom: 0;
+}
+
+/*
+.editlive-input-append {
+    display: inline-block;
+    .add-on {
+        border: 1px solid #c30;    
+        display: inline-block;
+        background: #eee;
+        padding: 3px 9px;
+        border: 1px solid #ddd;
+        margin-left: -6px;
+        color: #777;
+        border-width: 1px 1px 1px 0;
+        .border-radius(0 3px 3px 0);
+    }
+}
+*/
+
+.editlive-controls.inline.input-prepend,
+.editlive-controls.inline.input-append {
+  float: left;
+  margin-bottom: 0;
+}

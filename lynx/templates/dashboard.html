@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <title>Dashboard</title>
+
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="{{ STATIC_URL }}jquery-ui-1.10.4.custom.js"></script>
+
+
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" type=”text/css”/>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ STATIC_URL }}dashboard.css" type=”text/css”/>
+
+  <script src="{{ STATIC_URL }}dashboard.js"></script>
+
+
+
+
+</head>
+
+<body>
+  <div class="topbar top">Dashboard</div>
+
+ <div class="wrap">
+
+  <div class="col-md-6 profile">
+    <div class="topbar"><p>Your profile</p></div>
+    <img alt="140x140" src="{{ STATIC_URL }}/images/ash2.png" class="img-thumbnail pic" />
+
+    <br><a href="/logout/">Logout</a>
+
+    <hr class="line">
+
+
+  </div>
+  <div class="col-md-6 items">
+    <div class = "topbar"><p>Lynx</p></div>
+
+    <div class="itemsWrap">
+      <a href="#" class = "button white subjectsButton">
+        <i class="fa fa-briefcase"> Subjects: <span style="color: #0074cc;">4 </span></i>
+      </a>
+      <br>
+      <br>
+      <a href="http://www.google.lt">
+        <div class="button orange new">+new</div>
+      </a>
+
+      <br>
+
+      <div class="subjects">
+        <div class="button white small"><p>Cultural history</p>
+
+          <div class="topics">
+          </p><a href="#" ><p class="topic">"The lives of most influencable people which were influenced by common sence of humour tastics."</p></a>
+          <a href="#" ><p class="topic">"Second topic"</p></a><br>
+        </div>
+
+      </div>
+
+
+
+
+      <div class="button white small"><p>Antropology</p>
+
+        <div class="topics">
+          <a href="#" ><p class="topic">Third topic</p></a>
+          <a href="#" ><p class="topic">4th topic</p></a><br>
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+
+</div>
+
+</a>
+
+</body>
+
+</html>
