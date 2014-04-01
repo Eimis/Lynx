@@ -24,15 +24,18 @@ def Hello(request):
 	form = RegistrationForm() #this
 	if request.method == 'POST':
 		form = RegistrationForm(request.POST) # vs this
+		username = request.POST['username']
+		password = request.POST['password1']
 		if form.is_valid():
 			if "@" in request.POST['username']:
 				new_user = User.objects.create_user(username=request.POST['username'],password=request.POST['password1'])
+				user = authenticate(username=username, password=password) # LAST REG
 				return HttpResponseRedirect("/dashboard/")
 			else:
 				not_valid_email = "* This is not a valid email address"
 				return render(request, "hello.html",{"form" : form, "not_valid_email" : not_valid_email})
 		else: # form not valid
-			return render(request, "hello.html",{"form" : form})
+			return HttpResponse("form not valid")
 	else: # request 'GET'
 		return render(request, "hello.html",{"form" : form})
 
@@ -40,7 +43,7 @@ def Hello(request):
 def Dashboard(request):
 	return render(request, "dashboard.html",)
 
-@login_required(redirect_field_name=None) # .get rid of /next/ stuff in url when not logged in
+@login_required(redirect_field_name=None)
 def Dashboard(request):
 	return render(request, "dashboard.html",)
 	
@@ -61,7 +64,27 @@ def Login(request):
 	    	invalid_credentials = "* Invalid username or password"
 	        return render(request, "hello.html",{"invalid_credentials" : invalid_credentials, "form" : form,})
 	else:
-		return render(request, "hello.html")
+		return render(request, "hello.html",{"form" : form})
+
+def Retrieve_password(request):
+	email = request.POST['email']
+	password_sent = "Your password was sent to you"
+	not_valid_email = "* This is not a valid email address"
+	no_such_user = "No user with such email"
+	form = RegistrationForm() # for reg.
+
+	if request.method == 'POST':
+		if '@' in request.POST['email']:
+			try:
+				User.objects.get(username=email)
+				return render(request, "hello.html",{"password_sent" : password_sent, "form" : form})
+			except User.DoesNotExist:
+				return render(request, "hello.html",{"no_such_user" : no_such_user, "form" : form})
+		else:
+			return render(request, "hello.html",{"not_valid_email" : not_valid_email, "form" : form})
+
+
+
 
 
 @login_required(redirect_field_name=None)

@@ -46,6 +46,8 @@
 
         <p class="errors">{{ invalid_credentials }}</p>
         <p class="errors">{{ not_valid_email }}</p>
+        <p class="errors">{{ no_such_user }}</p>
+        <p class="errors">{{ password_sent }}</p>
 
       <!-- Login box start -->
 
@@ -102,12 +104,12 @@
                         <div class="username">
                           <i class="fa fa-envelope"></i>
 
-                          <form action = "http://127.0.0.1:8000/" method = 'POST'>
+                          <form class = "regForm" action = "http://127.0.0.1:8000/" method = 'POST'>
                             {% csrf_token %}
                             {{ form.username }}
 
                           </div>
-                          <div class="password">
+                          <div class="password1">
                             <i class="fa fa-key"></i>
                             {{ form.password1 }}
                           
@@ -146,13 +148,16 @@
                         <div class = "fog4">
                           <div class="username">
                             <i class="fa fa-envelope"></i>
-                            <input class = "usernameInput" type="text" placeholder="awesome@jack.com"></input>
+                            <form class="forgotForm" action = "http://127.0.0.1:8000/retrieve_password/" method = 'POST'>
+                              {% csrf_token %}
+                            <input name = "email" class = "usernameInput" type="text" placeholder="awesome@jack.com"></input>
+                          </form>
 
                           </div>
                           
                           <br>
                           
-                          <div class="button"><p>Go!</p></div>
+                          <div class="forgotButton"><p>Go!</p></div>
                         </div>
                       </div>
                     </div>

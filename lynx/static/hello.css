@@ -376,7 +376,7 @@ input[type="password"]
 }
 
 
-.button, .loginButton, .regButton{
+.button, .loginButton, .regButton, .forgotButton{
 	
 	width: 160px;
 	margin-top: 1.4em;

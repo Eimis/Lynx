@@ -39,7 +39,11 @@ $(document).ready(function(){
     });
 
     $('.regButton').click(function () {
-        $('form').submit();
+        $('.regForm').submit();
+    });
+
+    $('.forgotButton').click(function () {
+        $('.forgotForm').submit();
     });
 
     
