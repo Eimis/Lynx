@@ -1,0 +1,97 @@
+<!DOCTYPE html >
+
+
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" type=”text/css”/>
+<link rel="stylesheet" href="{{ STATIC_URL }}hello.css" type=”text/css”/>
+<script src="{{ STATIC_URL }}hello.js"></script>
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+<html>
+
+<head>
+  <title>Lynx app</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+  <div class="container wrap">
+    <div class="row clearfix">
+      <div class="col-md-12 logo"> <!-- just asimple centered -->
+       <br>
+       <br>
+       <br>
+       <p><span style="color:#ae9896; padding-right: 0px;">Lynx</span><span style="padding-left: 0px"> is a simple and beautiful tool for taking notes in your lectures.</span></span></p>
+       <p><span style=" font-size: 18px;"> And it works just as good as it looks.</span></span></p><br>
+     </div>
+   </div></div>
+
+   <div class="widebox">
+    <div class="container wrap">
+
+      {% if form.errors %}
+        {% for key, value in form.errors.items %}
+        <p class="errors">{{ value.as_text }}<br></p>
+        {% endfor %}
+      {% endif %}
+
+        <p class="errors">{{ invalid_credentials }}</p>
+        <p class="errors">{{ not_valid_email }}</p>
+        <p class="errors">{{ no_such_user }}</p>
+        <p class="errors">{{ password_sent }}</p>
+
+      
+          <!-- Forgot box start -->
+
+          <div class="fogwrap">
+            <div class="text">
+              <p class = "sign_in">Retrieve password</p></div>
+
+              <div class = "shadow">
+                <div class = "fog">
+                  <div class = "header">
+                    <div class = "fog2">
+                      <div class = "fog3">
+                        <div class = "fog4">
+                          <div class="username">
+                            <i class="fa fa-envelope"></i>
+                            <form class="forgotForm" action = "http://127.0.0.1:8000/reset" method = 'POST'>
+                              {% csrf_token %}
+                            <input name = "email" class = "usernameInput" type="text" placeholder="awesome@jack.com"></input>
+                          </form>
+
+                          </div>
+                          
+                          <br>
+                           {% block mainblock %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+{% endblock %}
+                          <div class="forgotButton"><p>Go!</p></div>
+
+                            
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div><br><br>
+              </div>
+            </div>
+
+            <!-- Forgot box end -->
+
+          </body>
+          </html>

@@ -10,7 +10,7 @@ $(document).ready(function(){
 
      // hide boxes
     $(".regwrap").children().hide();
-    $(".fogwrap").children().hide();
+
 
 
     $(".fa-plus-circle").click(function(){
@@ -42,9 +42,6 @@ $(document).ready(function(){
         $('.regForm').submit();
     });
 
-    $('.forgotButton').click(function () {
-        $('.forgotForm').submit();
-    });
 
     
 

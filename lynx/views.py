@@ -11,58 +11,68 @@ import json
 from django.forms.models import modelformset_factory
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.models import User
-from lynx.forms import RegistrationForm, TopicForm, SummaryForm
+from lynx.forms import TopicForm, SummaryForm, CustomUserCreationForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.template import Context
+from django.core.urlresolvers import reverse
+from django.contrib.auth.views import password_reset, password_reset_confirm
+from django.contrib.auth import get_user_model
 
 
 
 
 def Hello(request):
 	''' Register '''
-	form = RegistrationForm() #this
+	form = CustomUserCreationForm() #this
 	if request.method == 'POST':
-		form = RegistrationForm(request.POST) # vs this
-		username = request.POST['username']
-		password = request.POST['password1']
+		User = get_user_model() # my custom model
+		form = CustomUserCreationForm(request.POST) # vs this
+		email = request.POST['email']
+		password = request.POST['password']
 		if form.is_valid():
-			if "@" in request.POST['username']:
-				new_user = User.objects.create_user(username=request.POST['username'],password=request.POST['password1'])
-				user = authenticate(username=username, password=password) # LAST REG
-				return HttpResponseRedirect("/dashboard/")
+			if "@" in request.POST['email']:
+				new_user = User.objects.create_user(email=request.POST['email'],password=request.POST['password'])
+				new_user = authenticate(email=email, password=password)
+				login(request, new_user)
+				return HttpResponseRedirect('/dashboard/')
 			else:
 				not_valid_email = "* This is not a valid email address"
 				return render(request, "hello.html",{"form" : form, "not_valid_email" : not_valid_email})
 		else: # form not valid
-			return HttpResponse("form not valid")
+			#return HttpResponse("form not valid")
+			return render(request, "hello.html",{"form" : form})
 	else: # request 'GET'
 		return render(request, "hello.html",{"form" : form})
 
 @login_required(redirect_field_name=None) # get rid of /next/ stuff in url when not logged in
 def Dashboard(request):
-	return render(request, "dashboard.html",)
+	return render(request, "dashboard.html",{"user" : user})
 
-@login_required(redirect_field_name=None)
+@login_required
 def Dashboard(request):
-	return render(request, "dashboard.html",)
+	User = get_user_model() 
+	user = request.user
+	email = user.email
+	return render(request, "dashboard.html",{"email" : email,})
 	
 
 def Login(request):
-	form = RegistrationForm() # for reg.
+	form = CustomUserCreationForm() # for reg.
 	if request.method == 'POST':
-	    username = request.POST['username']
-	    password = request.POST['password']
-	    user = authenticate(username=username, password=password)
-	    if user is not None:
-	        if user.is_active:
-	            login(request, user)
-	            return HttpResponseRedirect("/dashboard/")
-	        else:
-	            return HttpResponse("User is inactive")
-	    else:
-	    	invalid_credentials = "* Invalid username or password"
-	        return render(request, "hello.html",{"invalid_credentials" : invalid_credentials, "form" : form,})
+		User = get_user_model() # custom user model
+		email = request.POST['email']
+		password = request.POST['password']
+		User = authenticate(email=email, password=password)
+		if User is not None: # TODO: inactive (disabled) users
+			login(request, User)
+			return HttpResponseRedirect("/dashboard/")
+		else:
+			invalid_credentials = "* Invalid username or password"
+			return render(request, "hello.html",{"invalid_credentials" : invalid_credentials, "form" : form,})
 	else:
 		return render(request, "hello.html",{"form" : form})
 
@@ -75,17 +85,38 @@ def Retrieve_password(request):
 
 	if request.method == 'POST':
 		if '@' in request.POST['email']:
+			# sending email:
 			try:
-				User.objects.get(username=email)
+				user = User.objects.get(username=email)
+				password = user.password
+				plaintext = get_template('email.txt')
+				htmly     = get_template('email.html')
+
+				d = Context({ 'password': password })
+
+				subject, from_email, to = 'your lynx.io password', 'hello@lynxapp.io', request.POST['email']
+				text_content = plaintext.render(d)
+				html_content = htmly.render(d)
+				msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+				msg.attach_alternative(html_content, "text/html")
+				msg.send()
+
 				return render(request, "hello.html",{"password_sent" : password_sent, "form" : form})
 			except User.DoesNotExist:
 				return render(request, "hello.html",{"no_such_user" : no_such_user, "form" : form})
 		else:
 			return render(request, "hello.html",{"not_valid_email" : not_valid_email, "form" : form})
 
+def password_reset(request):
+    return password_reset(request, template_name='reset.html',
+        email_template_name='reset_email.html',
+        subject_template_name='reset_subject.txt',
+        post_reset_redirect=reverse('/hello.html/'))
 
 
-
+def Reset(request):
+	#forgotForm = ForgotPasswordForm
+	return render(request, "registration/password_reset_form.html",{"forgotForm" : forgotForm})
 
 @login_required(redirect_field_name=None)
 def Logout(request):

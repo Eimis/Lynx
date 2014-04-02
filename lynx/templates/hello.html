@@ -40,7 +40,7 @@
 
       {% if form.errors %}
         {% for key, value in form.errors.items %}
-        <p class="errors">{{ value.as_text }}<br></p>
+        <p class="errors">{{ key }} - {{ value }}<br></p>
         {% endfor %}
       {% endif %}
 
@@ -67,7 +67,7 @@
 
                         <form action = "http://127.0.0.1:8000/login/" method="POST" class="logForm">
                           {% csrf_token %}
-                          <input name="username" class = "usernameInput" type="text" placeholder="awesome@jack.com"></input>
+                          <input name="email" class = "usernameInput" type="text" placeholder="awesome@jack.com"></input>
                         </div>
                         <div class="password">
                           <i class="fa fa-key"></i>
@@ -106,12 +106,12 @@
 
                           <form class = "regForm" action = "http://127.0.0.1:8000/" method = 'POST'>
                             {% csrf_token %}
-                            {{ form.username }}
+                            {{ form.email }}
 
                           </div>
-                          <div class="password1">
+                          <div class="password">
                             <i class="fa fa-key"></i>
-                            {{ form.password1 }}
+                            {{ form.password }}
                           
                         </div>
                         <br>
@@ -131,44 +131,7 @@
           <!-- Register box end -->
 
 
-          
-
-
-          <!-- Forgot box start -->
-
-          <div class="fogwrap">
-            <div class="text">
-              <p class = "sign_in">Retrieve password</p></div>
-
-              <div class = "shadow">
-                <div class = "fog">
-                  <div class = "header">
-                    <div class = "fog2">
-                      <div class = "fog3">
-                        <div class = "fog4">
-                          <div class="username">
-                            <i class="fa fa-envelope"></i>
-                            <form class="forgotForm" action = "http://127.0.0.1:8000/retrieve_password/" method = 'POST'>
-                              {% csrf_token %}
-                            <input name = "email" class = "usernameInput" type="text" placeholder="awesome@jack.com"></input>
-                          </form>
-
-                          </div>
-                          
-                          <br>
-                          
-                          <div class="forgotButton"><p>Go!</p></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div><br><br>
-                <div class="register"><a href="#"><i class="fa fa-arrow-circle-right"></i></a><br><br>
-                </div>
-              </div>
-            </div>
-
-            <!-- Forgot box end -->
+        
 
           </body>
           </html>
