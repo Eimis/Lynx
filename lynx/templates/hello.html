@@ -39,15 +39,18 @@
     <div class="container wrap">
 
       {% if form.errors %}
-        {% for key, value in form.errors.items %}
-        <p class="errors">{{ key }} - {{ value }}<br></p>
-        {% endfor %}
+      {% for key, value in form.errors.items %}
+      <p class="errors">{{ value.as_text }}<br></p>
+      {% endfor %}
       {% endif %}
 
-        <p class="errors">{{ invalid_credentials }}</p>
-        <p class="errors">{{ not_valid_email }}</p>
-        <p class="errors">{{ no_such_user }}</p>
-        <p class="errors">{{ password_sent }}</p>
+      {% block password_reset_form %}
+      {% endblock %}
+
+      <p class="errors">{{ invalid_credentials }}</p>
+      <p class="errors">{{ not_valid_email }}</p>
+      <p class="errors">{{ no_such_user }}</p>
+      <p class="errors">{{ password_sent }}</p>
 
       <!-- Login box start -->
 
@@ -73,12 +76,12 @@
                           <i class="fa fa-key"></i>
                           <input name="password" class = "passwordInput" type="password" placeholder="your secret magic key"></input>
 
+                        </div>
+                        <br>
+                        <div class = "forgot"><a href="/user/password/reset">Forgot your Password?</a></div>
+                        <input type="submit" value="login" class="loginButton"></input>
                       </div>
-                      <br>
-                      <div class = "forgot"><a href="#">Forgot your Password?</a></div>
-                      <input type="submit" value="login" class="loginButton"></input>
-                    </div>
-                  </form>
+                    </form>
 
                   </div>
                 </div>
@@ -112,11 +115,11 @@
                           <div class="password">
                             <i class="fa fa-key"></i>
                             {{ form.password }}
-                          
-                        </div>
-                        <br>
-                        <a href="#"><div class="regButton"><p>Start using Lynx</p></div></a>
-                      </form>
+
+                          </div>
+                          <br>
+                          <a href="#"><div class="regButton"><p>Start using Lynx</p></div></a>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -129,9 +132,6 @@
             </div>
           </div>
           <!-- Register box end -->
-
-
-        
 
           </body>
           </html>

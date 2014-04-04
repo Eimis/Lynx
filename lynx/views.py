@@ -1,6 +1,6 @@
 from django.shortcuts import render, render_to_response
 from django import forms
-from lynx.models import Lecture, Topic, Summary
+from lynx.models import Lecture, Topic, Summary, Subject
 from django.http import HttpResponse
 from django.forms.models import modelformset_factory
 from django.forms.formsets import formset_factory;
@@ -10,7 +10,7 @@ from django.views.generic.edit import UpdateView
 import json
 from django.forms.models import modelformset_factory
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from lynx.forms import TopicForm, SummaryForm, CustomUserCreationForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
@@ -48,16 +48,15 @@ def Hello(request):
 	else: # request 'GET'
 		return render(request, "hello.html",{"form" : form})
 
-@login_required(redirect_field_name=None) # get rid of /next/ stuff in url when not logged in
-def Dashboard(request):
-	return render(request, "dashboard.html",{"user" : user})
 
 @login_required
 def Dashboard(request):
-	User = get_user_model() 
 	user = request.user
 	email = user.email
-	return render(request, "dashboard.html",{"email" : email,})
+	subjectCount = user.subject_set.count()
+	subjects = user.subject_set.all()
+	topics = user.topic_set.all()
+	return render(request, "dashboard.html",{"email" : email, "subjectCount" : subjectCount, "subjects" : subjects, "topics" : topics, "user" : user})
 	
 
 def Login(request):
@@ -76,62 +75,25 @@ def Login(request):
 	else:
 		return render(request, "hello.html",{"form" : form})
 
-def Retrieve_password(request):
-	email = request.POST['email']
-	password_sent = "Your password was sent to you"
-	not_valid_email = "* This is not a valid email address"
-	no_such_user = "No user with such email"
-	form = RegistrationForm() # for reg.
-
-	if request.method == 'POST':
-		if '@' in request.POST['email']:
-			# sending email:
-			try:
-				user = User.objects.get(username=email)
-				password = user.password
-				plaintext = get_template('email.txt')
-				htmly     = get_template('email.html')
-
-				d = Context({ 'password': password })
-
-				subject, from_email, to = 'your lynx.io password', 'hello@lynxapp.io', request.POST['email']
-				text_content = plaintext.render(d)
-				html_content = htmly.render(d)
-				msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-				msg.attach_alternative(html_content, "text/html")
-				msg.send()
-
-				return render(request, "hello.html",{"password_sent" : password_sent, "form" : form})
-			except User.DoesNotExist:
-				return render(request, "hello.html",{"no_such_user" : no_such_user, "form" : form})
-		else:
-			return render(request, "hello.html",{"not_valid_email" : not_valid_email, "form" : form})
-
-def password_reset(request):
-    return password_reset(request, template_name='reset.html',
-        email_template_name='reset_email.html',
-        subject_template_name='reset_subject.txt',
-        post_reset_redirect=reverse('/hello.html/'))
-
-
-def Reset(request):
-	#forgotForm = ForgotPasswordForm
-	return render(request, "registration/password_reset_form.html",{"forgotForm" : forgotForm})
 
 @login_required(redirect_field_name=None)
 def Logout(request):
 	logout(request)
 	return HttpResponseRedirect("/")
 
+
+
 @login_required(redirect_field_name=None)
-def App(request):
-	lectures = Lecture.objects.all()
-	TopicFormSet = modelformset_factory(Topic, form=TopicForm, extra=0, can_delete=False)
-	SummaryFormSet = modelformset_factory(Summary, form=SummaryForm, extra=0, can_delete=False)
-	tquery = Topic.objects.all().order_by('date')
-	squery = Summary.objects.all().order_by('date')
+def App(request, subject):
+	User = get_user_model() # custom user
+	user = request.user
+	lectures = user.lecture_set.all().count()
+	subject = subject # from url
+	TopicFormSet = modelformset_factory(Topic, form=TopicForm, extra=0, fields=('name',), can_delete=False)
+	SummaryFormSet = modelformset_factory(Summary, form=SummaryForm, extra=0, fields=('content',), can_delete=False)
+	tquery = user.topic_set.all().order_by('date')
+	squery = user.summary_set.all().order_by('date')
 	zipped2 = zip(tquery,squery)
-	topicNumber = Topic.objects.count()
 	
 	# saving formsets:
 	if request.method == 'POST' and request.is_ajax():
@@ -159,11 +121,22 @@ def App(request):
 		for x,y in zipped:
 			pk_list.append(x.instance.pk)
 			pk_list.append(y.instance.pk)
-	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list, "topicNumber" : topicNumber, })
+	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject" : subject})
 
 
 @login_required(redirect_field_name=None)
-def New(request):
+def New_subject(request):
+	User = get_user_model() # custom user
+	user = request.user
+	new_subject = Subject(title = request.POST['subject_title'], user = user)
+	new_subject.save()
+	return HttpResponseRedirect("/dashboard/")
+
+
+
+
+@login_required(redirect_field_name=None)
+def New(request): # create new Topic and Summary
 	if request.method == 'POST' and request.is_ajax():
 		jsondata = request.read()
 		json_data = json.loads(jsondata)
@@ -217,5 +190,6 @@ def Remove_topic(request, id):
 	topic.delete()
 	summary.delete()
 	return render (request, "app.html", {"pk_list" : pk_list})
+
 
 

@@ -4,17 +4,18 @@
 
   <meta charset="utf-8">
   <title>Dashboard</title>
-
-  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
   <script src="{{ STATIC_URL }}jquery-ui-1.10.4.custom.js"></script>
-
-
   <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" type=”text/css”/>
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-
+  <script src="{{ STATIC_URL }}dashboard.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <link href="{{ STATIC_URL }}editable-custom.css" rel="stylesheet">
+  <script src="{{ STATIC_URL }}bootstrap3-editable/js/bootstrap-editable.js"></script>
   <link rel="stylesheet" href="{{ STATIC_URL }}dashboard.css" type=”text/css”/>
 
-  <script src="{{ STATIC_URL }}dashboard.js"></script>
+  
+
 
 
 
@@ -24,62 +25,112 @@
 <body>
   <div class="topbar top">Dashboard</div>
 
- <div class="wrap">
-
-  <div class="col-md-6 profile">
-    <div class="topbar"><p>Your profile</p></div>
-    <img alt="140x140" src="{{ STATIC_URL }}/images/ash2.png" class="img-thumbnail pic" />
-
-    <br><a href="/logout/">Logout ({{ email }}) </a>
-
-    <hr class="line">
 
 
-  </div>
-  <div class="col-md-6 items">
-    <div class = "topbar"><p>Lynx</p></div>
+  <div class="wrap">
 
-    <div class="itemsWrap">
-      <a href="#" class = "button white subjectsButton">
-        <i class="fa fa-briefcase"> Subjects: <span style="color: #0074cc;">4 </span></i>
-      </a>
-      <br>
-      <br>
-      <a href="http://www.google.lt">
-        <div class="button orange new">+new</div>
-      </a>
+    <div class="col-md-6 profile">
+      <div class="topbar"><p>Your profile</p></div>
+      <img alt="140x140" src="{{ STATIC_URL }}/images/ash2.png" class="img-thumbnail pic" />
 
-      <br>
+      <br><a href="/logout/">Logout ({{ email }}) </a><br>
 
-      <div class="subjects">
-        <div class="button white small"><p>Cultural history</p>
+      <a href="#" id="username2" data-type="text" data-pk="2" data-url="/post" data-title="Enter username"><p class="test">Username</p></a>
 
-          <div class="topics">
-          </p><a href="#" ><p class="topic">"The lives of most influencable people which were influenced by common sence of humour tastics."</p></a>
-          <a href="#" ><p class="topic">"Second topic"</p></a><br>
+     
+
+      <hr class="line">
+
+
+    </div>
+    <div class="col-md-6 items">
+      <div class = "topbar"><a href="/app/"><p>Lynx</p></a></div>
+
+      <div class="itemsWrap">
+        <a href="#" class = "custom_button white subjectsButton">
+          <i class="fa fa-briefcase"> Subjects: <span style="color: #0074cc;">{{ subjectCount }}</span></i>
+        </a>
+        <br>
+        <br>
+        <a href="http://www.google.lt">
+          <a data-toggle="modal" href="#myModal"><div class="custom_button orange new">+new</div></a>
+        </a>
+
+        <br>
+        <div class="subjects">
+
+          {% for subject in user.subject_set.all %}
+          <!--<div class="button orange edit_subject">edit</div>-->
+          <div class="custom_button white small">
+            <a href="#" id="username" data-type="text" data-pk="1" data-url="/post" data-title="Enter username" class="editable-link"><div class="subject_wrap"><p>{{ subject.title }}</p></div></a>
+          
+
+
+            <div class="topics">
+
+              {% for topic in subject.topic_set.all %}
+              <a href="#" ><p class="topic">"{{ topic.name }}"</p><br></a>
+
+              {% endfor %}
+            </div>
+
+          </div>
+          {% endfor %}
+
+
+
         </div>
 
-      </div>
+
+        Tests:<br><br>
+
+
+        
+  
+
+
+
+      <!-- Button HTML (to Trigger Modal) -->
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">New subject</h4>
+            </div>
+            <div class="modal-body">
+              Please enter a name for a new <b>Subject</b>. This is a basic, top-level object in Lynx, from which you will be able to create <b>Topics</b> and their corresponding <b>Summaries</b>. A good subject name,for example, would be "Cultural history", "Antropology", "Market research" or "Introduction to data mining methods in Python" or similar.<br><br>
+
+              <form action = "/new_subject/" method="POST" class="new_subject_form">
+                {% csrf_token %}
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
+                <input type="text" class="form-control new_subject_form" placeholder="Subject title" name="subject_title">
+              </div>
+            
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary new_subject_button">Create new subject</button>
+            </form>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
 
 
 
 
-      <div class="button white small"><p>Antropology</p>
-
-        <div class="topics">
-          <a href="#" ><p class="topic">Third topic</p></a>
-          <a href="#" ><p class="topic">4th topic</p></a><br>
-        </div>
-
-
-      </div>
 
 
     </div>
 
   </div>
-
-</div>
 
 
 </div>

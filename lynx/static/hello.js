@@ -10,6 +10,7 @@ $(document).ready(function(){
 
      // hide boxes
     $(".regwrap").children().hide();
+    $(".fogwrap").children().hide();
 
 
 
@@ -21,18 +22,14 @@ $(document).ready(function(){
 
     $(".fa-arrow-circle-right").click(function(){
     	$(".regwrap").children().fadeOut("fast", function(){
-    		$(".fogwrap").children().fadeOut("fast", function(){
                 $(".logwrap").children().fadeIn("fast");
-            })
+            
     	});
     })
 
 
-    $(".forgot").click(function(){
-        $(".logwrap").children().fadeOut("fast", function(){
-            $(".fogwrap").children().fadeIn("fast")
-        });
-    })
+
+
 
     $('.button').click(function () {
         $('.logForm').submit();

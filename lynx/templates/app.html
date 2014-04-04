@@ -28,7 +28,7 @@
 			<!--************ 1 **********-->
 
 			<div class="col-md-4 leftbar">
-				<a href="#">
+				<a href="/dashboard/">
 					<span class="helper"></span>
 					<img alt="140x140" src="{{ STATIC_URL }}/images/ash2.png" class="img-thumbnail my_circle" />
 					
@@ -38,7 +38,7 @@
 				</a>
 			</div>
 			<!--************ 2 **********-->
-			<div class="col-md-4 midbar"><p class="midbar">Cultural history</p><div class="stats"><p>Lectures: </p>{{ topicNumber }}</div>
+			<div class="col-md-4 midbar"><p class="midbar">{{ subject|capfirst }}</p><div class="stats"><p>Lectures: </p>{{ lectures }}</div>
 			</div>
 			<!--************ 3 **********-->
 			<div class="col-md-4 rightbar topright">
