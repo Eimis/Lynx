@@ -84,11 +84,15 @@ def Logout(request):
 
 
 @login_required(redirect_field_name=None)
-def App(request, subject):
+def App(request, slug):
 	User = get_user_model() # custom user
 	user = request.user
 	lectures = user.lecture_set.all().count()
-	subject = subject # from url
+	subject = slug # from url
+	subjects = Subject.objects.filter(user=request.user)
+	subject_list = []
+	for x in subjects:
+		subject_list.append(x.title.lower()) # slugs are all lowercased
 	TopicFormSet = modelformset_factory(Topic, form=TopicForm, extra=0, fields=('name',), can_delete=False)
 	SummaryFormSet = modelformset_factory(Summary, form=SummaryForm, extra=0, fields=('content',), can_delete=False)
 	tquery = user.topic_set.all().order_by('date')
@@ -121,7 +125,11 @@ def App(request, subject):
 		for x,y in zipped:
 			pk_list.append(x.instance.pk)
 			pk_list.append(y.instance.pk)
-	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject" : subject})
+
+	if subject not in subject_list:
+		return HttpResponseRedirect("/dashboard/")
+	else:
+		return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject_list" : subject_list, "slug" : slug})
 
 
 @login_required(redirect_field_name=None)
@@ -193,3 +201,6 @@ def Remove_topic(request, id):
 
 
 
+@login_required(redirect_field_name=None)
+def remove_summary_inline(request, id):
+	pass

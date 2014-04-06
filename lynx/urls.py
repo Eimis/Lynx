@@ -10,12 +10,15 @@ admin.autodiscover()
 urlpatterns = patterns('',
 	url(r'^$', Hello),
 	url(r'^app/$', App),
-	url(r'^app/(?P<subject>[-\w]+)/$', App),
+
 	url(r'^dashboard/$', Dashboard),
 	url(r'^login/$', Login),
 	url(r'^logout/$', Logout),
 	url(r'^app/new/$', New),
 	url(r'^new_subject/$', New_subject),
+
+    url(r'^app/(?P<slug>[-\w]+)/$', App),
+
 	url(r'^app/remove_summary/(?P<id>[-\w]+)/$', Remove_summary),
 	url(r'^app/remove_topic/(?P<id>[-\w]+)/$', Remove_topic),
 	url(r'^admin/', include(admin.site.urls)),

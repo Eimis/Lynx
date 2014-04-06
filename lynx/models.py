@@ -3,6 +3,7 @@ from lynx import settings
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 
 
 # *** Custom User model manager
@@ -108,9 +109,14 @@ class Subject(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     title = models.TextField(max_length=1000)
+    slug = models.SlugField(blank = True)
 
     def __unicode__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Subject, self).save(*args, **kwargs)
 
 
 class Lecture(models.Model): # only 4 id's ?

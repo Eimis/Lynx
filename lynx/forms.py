@@ -40,7 +40,7 @@ class CustomUserCreationForm(UserCreationForm):
     def __init__(self, *args, **kargs):
         super(CustomUserCreationForm, self).__init__(*args, **kargs)
         self.fields['email'].widget = forms.TextInput(attrs={ 'class': 'usernameInput', 'rows' : '1', 'placeholder' : 'awesome@jack.com' })
-        self.fields['password'].widget = forms.PasswordInput(attrs={ 'class': 'passwordInput', 'rows' : '1', 'placeholder' : 'your secret magic key' })
+        self.fields['password'].widget = forms.PasswordInput(attrs={ 'class': 'passwordInput', 'rows' : '1', 'placeholder' : 'your secret magic key' }) # TODO check create user via admin
         del self.fields['username']
         del self.fields['password1']
         del self.fields['password2']

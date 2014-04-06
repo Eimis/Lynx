@@ -5,21 +5,44 @@
 
 
 
+html { 
+      background: url("http://127.0.0.1:8000/static/images/vilnius2.JPG") no-repeat center center fixed; 
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+}
+
+body { 
+      background: url("http://127.0.0.1:8000/static/images/vilnius2.JPG") no-repeat center center fixed; 
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+}
+
 .wrap{
     margin: 0 auto;
     width: 768px;
     margin-top:2em;
+    overflow: hidden;
+    margin-bottom: 3em;
+    background: rgba(255, 255, 255, 0.6);
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
 	}
+
 
 .profile{
 
-	padding:0;
+	padding:1em;
 	text-align: center;
 }
 
 .items{
 	border-left: 0px;
-	padding: 0;
+	padding: 1em;
 }
 
 .topbar{
@@ -70,8 +93,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 
 .itemsWrap p{
-	padding: .5em;
-	margin-left: 1.1em;
 	color: #333333;
 }
 
@@ -106,7 +127,7 @@ border-bottom: 1px solid #c6c6c6;
 	text-align: center;
 	text-decoration: none;
 	font: 14px/100% Arial, Helvetica, sans-serif;
-	padding: .5em 2em .55em;
+	padding: .5em 1em .55em;
 	text-shadow: 0 1px 1px rgba(0,0,0,.3);
 	-webkit-border-radius: .5em; 
 	-moz-border-radius: .5em;
@@ -188,6 +209,27 @@ border-bottom: 1px solid #c6c6c6;
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f47a20', endColorstr='#faa51a');
 }
 
+.green {
+	color: #e8f0de;
+	border: solid 1px #538312;
+	background: #64991e;
+	background: -webkit-gradient(linear, left top, left bottom, from(#7db72f), to(#4e7d0e));
+	background: -moz-linear-gradient(top,  #7db72f,  #4e7d0e);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#7db72f', endColorstr='#4e7d0e');
+}
+.green:hover {
+	background: #538018;
+	background: -webkit-gradient(linear, left top, left bottom, from(#6b9d28), to(#436b0c));
+	background: -moz-linear-gradient(top,  #6b9d28,  #436b0c);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#6b9d28', endColorstr='#436b0c');
+}
+.green:active {
+	color: #a9c08c;
+	background: -webkit-gradient(linear, left top, left bottom, from(#4e7d0e), to(#7db72f));
+	background: -moz-linear-gradient(top,  #4e7d0e,  #7db72f);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#4e7d0e', endColorstr='#7db72f');
+}
+
 
 .subjects{ /* wrapper for expanded div */
 	height: auto;
@@ -229,17 +271,52 @@ border-bottom: 1px solid #c6c6c6;
 	float: left;
 }
 
-a.editable-link { border-bottom: none; }
-a.editable-click{ color: #0088cc; border-bottom: none;}
+a.editable-click { border-bottom: none; }
+
+a.editable-click:hover { 
+    border-bottom:none;
+}
+
+.small p:hover{
+	color:#0074cc;
+}
 
 .topic{
 	text-align: left;
 }
 
+.topic a{
+	width: 80%;
+}
+
+
+.topic a:hover{
+	color: #0074cc;
+}
+
+.edit:hover{
+	color: #000000;
+}
+
+.delete:hover{
+	color: #000000;
+}
+
+
 
 .topics{
 	margin-top: 3em;
 }
+
+.topics table td{
+	/*border: 1px solid red;*/
+}
+
+.table_topics{
+	width: 80%;
+	text-align: left
+}
+
 
 .topics p{
 	padding: 0;
@@ -260,13 +337,33 @@ a.editable-click{ color: #0088cc; border-bottom: none;}
 	text-align: center;
 }
 
+.subject_pk{
+	display: none;
+}
+
 .new{
 	float: right;
 	margin-top: -2em;
 	margin-left: 10em;
 	display: inline;
 	height: 30px;
-	width: 20%
+	width: 25%;
+}
+
+.plus{
+	display: inline;
+	width: 50%;
+}
+
+.visitApp{
+	display: inline;
+	height: 30px;
+	width: 20%;
+}
+
+.new p{
+	color: white;
+	margin-right: 10px;
 }
 
 .edit_subject{
@@ -287,9 +384,48 @@ a.editable-click{ color: #0088cc; border-bottom: none;}
 	border-top: 1px solid #c6c6c6;
 }
 
+.footerLine{
+	border-top: 1px solid #c6c6c6;
+	width: 100%;
+}
+
 .top{
 	text-align: center;
 }
 
+.footer{
+	text-align: center;
+}
 
+.footer p{
+	color: white;
+}
 
+.errors{
+	text-align: center;
+}
+
+.edit{
+	margin-left: .7em;
+	float: right;
+	color: #c6c6c6;
+}
+
+.delete{
+	
+	float: right;
+	color: #c6c6c6;
+}
+
+.deleteSubject{
+	display: inline;
+	float: right;
+}
+
+.deleteSubjectIcon{
+	color: #c6c6c6;
+}
+
+.deleteSubjectIcon:hover{
+	color: #000000;
+}

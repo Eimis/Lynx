@@ -11,6 +11,7 @@
   <script src="{{ STATIC_URL }}dashboard.js"></script>
   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
   <link href="{{ STATIC_URL }}editable-custom.css" rel="stylesheet">
+  <link href="{{ STATIC_URL }}editable-custom.css" rel="stylesheet">
   <script src="{{ STATIC_URL }}bootstrap3-editable/js/bootstrap-editable.js"></script>
   <link rel="stylesheet" href="{{ STATIC_URL }}dashboard.css" type=”text/css”/>
 
@@ -25,7 +26,7 @@
 <body>
   <div class="topbar top">Dashboard</div>
 
-
+  <br><div class="errors">Infobox</div>
 
   <div class="wrap">
 
@@ -39,12 +40,12 @@
 
      
 
-      <hr class="line">
+      
 
 
     </div>
     <div class="col-md-6 items">
-      <div class = "topbar"><a href="/app/"><p>Lynx</p></a></div>
+      <div class = "topbar"><p>Lynx</p></div>
 
       <div class="itemsWrap">
         <a href="#" class = "custom_button white subjectsButton">
@@ -53,7 +54,7 @@
         <br>
         <br>
         <a href="http://www.google.lt">
-          <a data-toggle="modal" href="#myModal"><div class="custom_button orange new">+new</div></a>
+          <a data-toggle="modal" href="#myModal"><div class="custom_button orange new"><p class = "newText"><i class="glyphicon glyphicon-plus plus"></i> new</p></div></a>
         </a>
 
         <br>
@@ -62,14 +63,31 @@
           {% for subject in user.subject_set.all %}
           <!--<div class="button orange edit_subject">edit</div>-->
           <div class="custom_button white small">
-            <a href="#" id="username" data-type="text" data-pk="1" data-url="/post" data-title="Enter username" class="editable-link"><div class="subject_wrap"><p>{{ subject.title }}</p></div></a>
+            <div class="subject_wrap deleteSubject"><p><i class="fa fa-times deleteSubjectIcon"></i></p></div>
+            <a href="#" class="username" data-type="text" data-pk="1" data-url="/post" data-title="Enter username" class="editable-link">
+              
+                <div class="subject_wrap"><p>{{ subject.title }}</p></div>
+              
+            </a>
+            <div class="subject_pk">{{ subject.pk }}</div>
           
 
 
             <div class="topics">
 
+              <a href = "/app/{{ subject.slug }}/"><div class="custom_button green visitApp"><i class="glyphicon glyphicon-circle-arrow-right proceed"></i> Proceed to web app</div></a>
+              <hr class="line"><br>
+
               {% for topic in subject.topic_set.all %}
-              <a href="#" ><p class="topic">"{{ topic.name }}"</p><br></a>
+               <table style="width:300px">
+                <tr>
+                  <td class="table_topics"><a href="#" class="topicEditable" data-type="textarea" data-pk="1" data-url="/post" data-title="Enter username" class="editable-link"><p class="topic">"{{ topic.name }}"</p></a></td>
+                  <td class="table_buttons"><a data-toggle="modal" href="#myModal2"><i class="glyphicon glyphicon-pencil edit"></i></a><i class="glyphicon glyphicon-remove delete"></td>    
+                </tr>
+
+              </table></p><br>
+
+
 
               {% endfor %}
             </div>
@@ -82,7 +100,7 @@
         </div>
 
 
-        Tests:<br><br>
+
 
 
         
@@ -110,6 +128,9 @@
                 <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
                 <input type="text" class="form-control new_subject_form" placeholder="Subject title" name="subject_title">
               </div>
+
+
+      
             
 
 
@@ -133,9 +154,12 @@
   </div>
 
 
+<br><hr class="footerLine">
+
 </div>
 
-</a>
+<hr class="line">
+<div class="footer"><p>Help</p></div>
 
 </body>
 
