@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.base import View
 from django.views.generic.edit import UpdateView
 import json
+from django.utils import simplejson
 from django.forms.models import modelformset_factory
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 #from django.contrib.auth.models import User
@@ -21,6 +22,7 @@ from django.template import Context
 from django.core.urlresolvers import reverse
 from django.contrib.auth.views import password_reset, password_reset_confirm
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 
 
 
@@ -54,9 +56,11 @@ def Dashboard(request):
 	user = request.user
 	email = user.email
 	subjectCount = user.subject_set.count()
-	subjects = user.subject_set.all()
-	topics = user.topic_set.all()
-	return render(request, "dashboard.html",{"email" : email, "subjectCount" : subjectCount, "subjects" : subjects, "topics" : topics, "user" : user})
+	subjects = user.subject_set.all().order_by('-date')
+	topics = user.topic_set.all().order_by('-date')
+	current_site = Site.objects.get_current()
+	domain = current_site.domain
+	return render(request, "dashboard.html",{"email" : email, "subjectCount" : subjectCount, "subjects" : subjects, "topics" : topics, "user" : user, "domain" : domain})
 	
 
 def Login(request):
@@ -88,8 +92,10 @@ def App(request, slug):
 	User = get_user_model() # custom user
 	user = request.user
 	lectures = user.lecture_set.all().count()
-	subject = slug # from url
+	subject = Subject.objects.get(user=request.user, slug=slug) # from url
 	subjects = Subject.objects.filter(user=request.user)
+	topics = Topic.objects.filter(subject = subject.pk)
+	summaries = Summary.objects.filter(subject = subject.pk)
 	subject_list = []
 	for x in subjects:
 		subject_list.append(x.title.lower()) # slugs are all lowercased
@@ -97,7 +103,6 @@ def App(request, slug):
 	SummaryFormSet = modelformset_factory(Summary, form=SummaryForm, extra=0, fields=('content',), can_delete=False)
 	tquery = user.topic_set.all().order_by('date')
 	squery = user.summary_set.all().order_by('date')
-	zipped2 = zip(tquery,squery)
 	
 	# saving formsets:
 	if request.method == 'POST' and request.is_ajax():
@@ -117,8 +122,8 @@ def App(request, slug):
 		else:
 			return HttpResponse("not valid formsets, dude") # for testing purposes
 	else: # request=GET
-		t_formset = TopicFormSet(queryset = tquery)
-		s_formset = SummaryFormSet(queryset = squery)
+		t_formset = TopicFormSet(queryset = topics)
+		s_formset = SummaryFormSet(queryset = summaries)
 		zipped = zip(t_formset.forms, s_formset.forms)
 		# 4 testing:
 		pk_list = []
@@ -126,10 +131,7 @@ def App(request, slug):
 			pk_list.append(x.instance.pk)
 			pk_list.append(y.instance.pk)
 
-	if subject not in subject_list:
-		return HttpResponseRedirect("/dashboard/")
-	else:
-		return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject_list" : subject_list, "slug" : slug})
+	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject_list" : subject_list, "slug" : slug, "topics" : topics,})
 
 
 @login_required(redirect_field_name=None)
@@ -140,6 +142,48 @@ def New_subject(request):
 	new_subject.save()
 	return HttpResponseRedirect("/dashboard/")
 
+@login_required(redirect_field_name=None)
+def Remove_subject(request, id):
+	User = get_user_model() # custom user
+	user = request.user
+	subject = Subject.objects.get(user = user, pk=id)
+	subject.delete()
+	subjectCount = user.subject_set.count()
+	return render(request, "dashboard.html") # not p. ?
+
+
+@login_required(redirect_field_name=None)
+def Remove_topic_d(request, id): # (d = dashboard)
+	User = get_user_model() # custom user
+	user = request.user
+	topic = Topic.objects.get(user = user, pk=id)
+	topic.delete()
+	return render(request, "dashboard.html") # not p. ?
+
+
+
+def Update_subject(request, id):
+	User = get_user_model() # custom user
+	user = request.user
+	subject = Subject.objects.get(user = user, pk=id)
+	subject_title = request.POST['value']
+	subject.title = subject_title
+	subject.save()
+	return HttpResponse(subject) # 4 testing only
+
+def Update_topic(request, id):
+	User = get_user_model() # custom user
+	user = request.user
+	topic = Topic.objects.get(user = user, pk=id)
+	topic_name = request.POST['value']
+	topic.name = topic_name
+	topic.save()
+	return HttpResponse("ok") # 4 testing only
+
+def Subject_count(request):
+	user = request.user
+	subjectCount = user.subject_set.count()
+	return HttpResponse(simplejson.dumps(subjectCount), mimetype='application/json')
 
 
 

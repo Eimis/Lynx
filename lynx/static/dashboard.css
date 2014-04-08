@@ -261,13 +261,14 @@ border-bottom: 1px solid #c6c6c6;
 .subject_wrap{ /* to bind x-editable only on pure text */
 	padding: .5em;
 	display: inline-block;
+	width: auto;
 }
 
 .subject_wrap p{ /* to bind x-editable only on pure text */
 	width: 100px;
 	margin:0;
 	padding: 0;
-	width: 1%;
+	width: auto;
 	float: left;
 }
 
@@ -428,4 +429,9 @@ a.editable-click:hover {
 
 .deleteSubjectIcon:hover{
 	color: #000000;
+}
+
+
+.deleteSubjectModalFooter{
+	padding: 0;
 }

@@ -1,3 +1,8 @@
+/* Search 'Lynx' for custom modifications */
+
+
+
+
 /*! X-editable - v1.5.1 
 * In-place editing with Twitter Bootstrap, jQuery UI or pure jQuery
 * http://github.com/vitalets/x-editable
@@ -1861,7 +1866,20 @@ Makes editable any HTML element on the page. Applied as jQuery method.
                     if(bgColor === 'transparent') {
                         bgColor = ''; 
                     }
+
                     $e.css('background-color', bgColor);
+
+                    /* Lynx start */
+
+                    if ($e.attr('data-title') == 'Rename subject'){
+
+                        $e.wrapInner( "<div class='subject_wrap'><p></p></div>" );
+                    } else {
+                        console.log("Lynx pass")
+                    }
+
+                    /* Lynx end */
+
                     $e.addClass('editable-bg-transition');
                     setTimeout(function(){
                        $e.removeClass('editable-bg-transition');  

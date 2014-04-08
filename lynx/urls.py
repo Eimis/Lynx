@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from lynx.views import  Hello, App, New, Remove_summary, Remove_topic, Dashboard, Login, Logout, New_subject
+from lynx.views import  Hello, App, New, Remove_summary, Remove_topic, Dashboard, Login, Logout, New_subject, Remove_subject, Subject_count, Update_subject, Remove_topic_d, Update_topic
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
@@ -16,9 +16,12 @@ urlpatterns = patterns('',
 	url(r'^logout/$', Logout),
 	url(r'^app/new/$', New),
 	url(r'^new_subject/$', New_subject),
-
+	url(r'^subject_count/$', Subject_count),
     url(r'^app/(?P<slug>[-\w]+)/$', App),
-
+	url(r'^remove_subject/(?P<id>[-\w]+)/$', Remove_subject),
+	url(r'^remove_topic_d/(?P<id>[-\w]+)/$', Remove_topic_d),
+	url(r'^update_subject/(?P<id>[-\w]+)/$', Update_subject),
+	url(r'^update_topic/(?P<id>[-\w]+)/$', Update_topic),
 	url(r'^app/remove_summary/(?P<id>[-\w]+)/$', Remove_summary),
 	url(r'^app/remove_topic/(?P<id>[-\w]+)/$', Remove_topic),
 	url(r'^admin/', include(admin.site.urls)),

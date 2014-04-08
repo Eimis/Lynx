@@ -6,14 +6,14 @@
   <title>Dashboard</title>
   <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
   <script src="{{ STATIC_URL }}jquery-ui-1.10.4.custom.js"></script>
-  <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" type=”text/css”/>
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" content-type: "text/css/">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" content-type: text/css>
   <script src="{{ STATIC_URL }}dashboard.js"></script>
   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <link href="{{ STATIC_URL }}editable-custom.css" rel="stylesheet">
-  <link href="{{ STATIC_URL }}editable-custom.css" rel="stylesheet">
+  <link href="{{ STATIC_URL }}editable-custom.css" rel="stylesheet" content-type: text/css>
+  <link href="{{ STATIC_URL }}editable-custom.css" rel="stylesheet" content-type: text/css>
   <script src="{{ STATIC_URL }}bootstrap3-editable/js/bootstrap-editable.js"></script>
-  <link rel="stylesheet" href="{{ STATIC_URL }}dashboard.css" type=”text/css”/>
+  <link rel="stylesheet" href="{{ STATIC_URL }}dashboard.css" content-type: "text/css/">
 
   
 
@@ -26,7 +26,7 @@
 <body>
   <div class="topbar top">Dashboard</div>
 
-  <br><div class="errors">Infobox</div>
+  <br><div class="errors">{{ domain }}</div>
 
   <div class="wrap">
 
@@ -49,7 +49,7 @@
 
       <div class="itemsWrap">
         <a href="#" class = "custom_button white subjectsButton">
-          <i class="fa fa-briefcase"> Subjects: <span style="color: #0074cc;">{{ subjectCount }}</span></i>
+          <i class="fa fa-briefcase"> Subjects: <span style="color: #0074cc;" class="subjectCount">{{ subjectCount }}</span></i>
         </a>
         <br>
         <br>
@@ -60,16 +60,27 @@
         <br>
         <div class="subjects">
 
-          {% for subject in user.subject_set.all %}
+          {% for subject in subjects %}
           <!--<div class="button orange edit_subject">edit</div>-->
           <div class="custom_button white small">
-            <div class="subject_wrap deleteSubject"><p><i class="fa fa-times deleteSubjectIcon"></i></p></div>
-            <a href="#" class="username" data-type="text" data-pk="1" data-url="/post" data-title="Enter username" class="editable-link">
+            <div class="subject_wrap deleteSubject">
+              <a data-toggle="modal" href="#myModal2">
+                <p>
+                  <div class="subject_pk">
+                    <a href="{{ domain }}remove_subject/{{ subject.pk }}">
+                    </a>
+                  </div>
+                  <i class="fa fa-times deleteSubjectIcon">
+                  </i>
+                </p>
+              </a>
+            </div>
+            <a href="#" class="subject_editable" data-type="text" data-pk="{{ subject.pk }}" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" data-url="{{ domain }}update_subject/{{ subject.pk }}/" data-title="Rename subject" class="editable-link" highlight: "#428bca">
               
                 <div class="subject_wrap"><p>{{ subject.title }}</p></div>
               
             </a>
-            <div class="subject_pk">{{ subject.pk }}</div>
+            
           
 
 
@@ -81,8 +92,8 @@
               {% for topic in subject.topic_set.all %}
                <table style="width:300px">
                 <tr>
-                  <td class="table_topics"><a href="#" class="topicEditable" data-type="textarea" data-pk="1" data-url="/post" data-title="Enter username" class="editable-link"><p class="topic">"{{ topic.name }}"</p></a></td>
-                  <td class="table_buttons"><a data-toggle="modal" href="#myModal2"><i class="glyphicon glyphicon-pencil edit"></i></a><i class="glyphicon glyphicon-remove delete"></td>    
+                  <td class="table_topics"><a href="http://google.lt" class="topicEditable" data-type="textarea" data-pk="{{ topic.pk }}" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" data-url="{{ domain }}update_topic/{{ topic.pk }}/" data-title="Update topic" class="editable-link"><p class="topic">{{ topic.name }}</p></a></td>
+                  <td class="table_buttons"><a data-toggle="modal" href="#myModal2"><i class="glyphicon glyphicon-pencil edit"></i></a><a href = "{{ domain }}remove_topic_d/{{ topic.pk }}"><i class="glyphicon glyphicon-remove delete"></a></td>    
                 </tr>
 
               </table></p><br>
@@ -111,7 +122,8 @@
       <!-- Button HTML (to Trigger Modal) -->
 
 
-      <!-- Modal -->
+      <!-- Modal start-->
+
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -135,6 +147,7 @@
 
 
             </div>
+
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="button" class="btn btn-primary new_subject_button">Create new subject</button>
@@ -143,6 +156,39 @@
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
+
+      <!-- Modal end -->
+
+  <!-- Modal 2 start-->
+
+      <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Remove subject</h4>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to proceed ? All <b>Topics</b> and <b>Summaries</b> that are related to this Subject will also be removed and the change is irreversible.
+
+               
+
+
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary removeSubject">Remove subject</button>
+            
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <!-- Modal 2 end -->
+
+
+
 
 
 

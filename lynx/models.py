@@ -133,9 +133,14 @@ class Topic(models.Model):
     def __unicode__(self):
     	return self.name
 
+    #class Meta:
+        #''' didn't find a way to sort that in view '''
+        #ordering = ['-date']
+
 class Summary(models.Model):
     topic = models.OneToOneField(Topic)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    subject = models.ForeignKey(Subject)
     content = models.TextField(max_length=1000, blank=True, null=True, verbose_name=u'')
     date = models.DateTimeField(auto_now_add=True)
 
