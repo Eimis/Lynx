@@ -12,7 +12,7 @@ class TopicForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TopicForm, self).__init__(*args, **kwargs)
-        self.fields['name'].widget = forms.Textarea(attrs={ 'class': 'topicTextarea', 'rows': '1' })
+        self.fields['name'].widget = forms.Textarea(attrs={ 'class': 'topicTextarea expanding', 'rows': '1', 'id' : 'animated'})
 
 class SummaryForm(forms.ModelForm):
     class Meta:
@@ -20,7 +20,7 @@ class SummaryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SummaryForm, self).__init__(*args, **kwargs)
-        self.fields['content'].widget = forms.Textarea(attrs={ 'class': 'summaryTextarea', 'rows' : '1' })
+        self.fields['content'].widget = forms.Textarea(attrs={ 'class': 'summaryTextarea expanding', 'rows' : '1', 'id' : 'animated' })
 
 
 

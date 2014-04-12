@@ -2,15 +2,21 @@
 <html>
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" type=”text/css”/>
-	<link rel="stylesheet" href="{{ STATIC_URL }}app.css" type=”text/css”/>
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" content-type: text/css/>
 	<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
 	<script src="{{ STATIC_URL }}app.js"></script>
-	<script src="{{ STATIC_URL }}jquery.elastic.source.js"></script>
+	<script src="{{ STATIC_URL }}expanding.js"></script>
+	<link rel="stylesheet" href="{{ STATIC_URL }}app.css" content-type: text/css/>
+	
+	<!--<script src="{{ STATIC_URL }}jquery.autosize.js"></script>-->
 	<input id="csrf_token" value="{% csrf_token %}"/>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" content-type: text/css />
 	<script src="{{ STATIC_URL }}forms.js"></script>
+	<script src="{{ STATIC_URL }}jquery-ui-1.10.4.custom.js"></script>
 	<title>Welcome back</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type='text/javascript' src='{{ STATIC_URL }}tipsy/javascripts/jquery.tipsy.js'></script>
+	<link rel="stylesheet" href="{{ STATIC_URL }}tipsy/stylesheets/tipsy.css" type="text/css" />
 </head>
 <body>
 		<!--
@@ -19,65 +25,99 @@
         alert('clicked outside of editor');
     }
 });-->
+
+<div class="topbar">
+		<!--************ 1 **********-->
+
+		<div class="col-md-4 leftbar">
+			<a href="/dashboard/">
+				<span class="helper"></span>
+				<img alt="140x140" src="{{ STATIC_URL }}/images/ash2.png" class="img-thumbnail my_circle" />
+				
+			</a>
+			<a href="#">
+				
+			</a>
+		</div>
+		<!--************ 2 **********-->
+		<div class="col-md-4 midbar"><p class="midbar">{{ slug|capfirst }}</p><div class="stats"><p>Topics: </p>{{ topicCount }}</div><div class="stats" style="margin-left: 0;"><a href="#"><div class="custom_button green addNew"><i class="fa fa-plus deleteSubjectIcon"></i> Add new</div></div></div>
+	<!--************ 3 **********-->
+	<div class="col-md-4 rightbar topright">
+		<span class="helper"></span>
+		<a href="#"><p style="display: inline-block;"></p></a>
+		<div class="exportBox"><p><span class="glyphicon glyphicon-share-alt"></span></p></div>
+		<div class="exportBox"><p><span class="glyphicon glyphicon-floppy-save"></span></p></div>
+
+
+	</div>
+</div>
 <div id="wrap">
 	
 
+
 	<!--<div class="col-md-3 meniu" ></div>-->
 	<div class="col-md-4 editor centered">
-		<div class="topbar"> <!-- fixed -->
-			<!--************ 1 **********-->
-
-			<div class="col-md-4 leftbar">
-				<a href="/dashboard/">
-					<span class="helper"></span>
-					<img alt="140x140" src="{{ STATIC_URL }}/images/ash2.png" class="img-thumbnail my_circle" />
-					
-				</a>
-				<a href="#">
-					
-				</a>
-			</div>
-			<!--************ 2 **********-->
-			<div class="col-md-4 midbar"><p class="midbar">{{ slug|capfirst }}</p><div class="stats"><p>Lectures: </p>{{ lectures }}</div>
-			</div>
-			<!--************ 3 **********-->
-			<div class="col-md-4 rightbar topright">
-				<span class="helper"></span>
-				<a href="#"><p style="display: inline-block;"><p>Lecture 1</p></p></a>
-				<div class="exportBox"><p><span class="glyphicon glyphicon-share-alt"></span></p></div>
-				<div class="exportBox"><p><span class="glyphicon glyphicon-floppy-save"></span></p></div>
-
-
-			</div>
+		<div class="domain">{{ domain }}</div>
+		<div class="subjectName">{{ slug }}</div>
+		<div class="circles">
+			<div class="circle"></div>
+			<div class="circle"></div>
+			<div class="circle"></div>
 		</div>
-		<form action = "http://127.0.0.1:8000/app/" method = "POST" class = "form">
-			{% csrf_token %}
-			<!-- t_formset.management_form -->
-			{{ t_formset.management_form }}
-			<!-- t_formset.management_form -->
-			{{ s_formset.management_form }}
-			<!-- formsets -->
-			{% for topic, summary in zipped %}
-			<div class="topic">{{ topic }}</div><p class = "topicDate">{{ topic.instance.date }}</p>
-			<input type="submit" value="Submit" class="mygt" />
-			<a href="/app/remove_topic/{{ topic.instance.pk }}"><p class="remove_topic">Remove topic</p></a>
+
+<form action = "http://127.0.0.1:8000/app/" method = "POST" class = "form">
+	{% csrf_token %}
+	<div class = "static">
+	<!-- t_formset.management_form -->
+	{{ t_formset.management_form }}
+	<!-- t_formset.management_form -->
+	{{ s_formset.management_form }}
+	<!-- formsets -->
+	{% for topic, summary in zipped %}
+
+
+
+	<div class="topic">{{ topic }}
+		<div class="buttons">
+
+			<a href="/app/remove_summary/{{ summary.instance.pk }}">
+			<div class="custom_button white removeSummary">
+				<i class="fa fa-times deleteSubjectIcon"></i>
+				Remove just this summary
+			</div>
+		</a>
+
+			<a href="/app/remove_topic/{{ topic.instance.pk }}">
+			<div class="custom_button white removeTopic" title="Remove topic">
+				<i class="fa fa-times deleteSubjectIcon"></i>
+				Remove topic
+			</div>
+		</a>
+
+
+		</div>
+	</div>
+	<div class="summaryContainer">
+	<div class = "summaryWrap"><p class = "topicDate">{{ topic.instance.date }}</p>
+
+			<!--<input type="submit" value="Submit" class="mygt" />
+			<a href="/app/remove_topic/{{ topic.instance.pk }}"><p class="remove_topic">Remove topic</p></a>-->
 			<br>
 			<div class="summary">{{ summary }}</div>
 			<br>
-			<input type="submit" value="Submit" class="mygt" />
-			<a href="/app/remove_summary/{{ summary.instance.pk }}"><p class="remove_summary">Remove summary</p></a>
+			<!--<input type="submit" value="Submit" class="mygt" />-->
+			
+		</div>
+	</div>
 			{% endfor %}
 			<br>
-		</form>
+		</form></div>
 
-		Adding new (dynamic) forms:
-		<br>
 
-		<fieldset id="buildyourform">
-		</fieldset>
-		<input type="button" value="Add a field" class="add" id="add" /><br><br><br>
+	</div>
 
-		<b>Tests</b>:<br>
+	<div class="tests">
+	<b>Tests</b>:<br>
 		pk_list:
 		{{ pk_list }}<br>
 		Previous summary PK:
@@ -85,10 +125,7 @@
 
 		Subject list:{{ subject_list }}<br>
 		Test: {{ topics }}
-
 	</div>
-
-	
 
 
 </div>

@@ -66,11 +66,6 @@ $(document).ready(function(){
                 success: console.log("Removed subject from dashboard. Link: " + link)
             })
 
-            /*$.ajax({
-                url: 'http://127.0.0.1:8000/subject_count/'
-                type: "get",
-                success: console.log('Probablyeceived subjects')
-            })*/
 
             event.preventDefault();
             $deleteSubjectIcon.parents(".small").animate(

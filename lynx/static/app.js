@@ -199,12 +199,23 @@ $(document).ready(function(){
 
 
 $(document).ready(function(){
-    // auto height:
-    jQuery('textarea').elastic();
-    jQuery('textarea').trigger('update');
+
+  $(document).on('click', '.buttons', function(e){
+    e.preventDefault();
+  })
+
+
+
+  $(function() {
+   $('a[rel=tipsy]').tipsy({fade: true, gravity: 'n'});
+ });
+
+  $('.removeTopic').first().attr('title', "You can't remove initial topic")
+  $('.removeTopic').first().tipsy();
+  $('.removeTopic').first().parent().attr('href', '#');
 
     // adding new forms
-    $("#add").click(function() {
+    /*$("#add").click(function() {
       var intId = $("#buildyourform div").length + 1;
       var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/><br>");
         var $staticSummaryPk = $(this).parent().find('a').last().attr("href").match(/(\d+)/)[1]; // previous static Summary's PK
@@ -241,62 +252,94 @@ $(document).ready(function(){
         $("#buildyourform").append(fieldWrapper);
 
 
-      });
+      });*/
 
-    // submitting the new forms via Ajax:
-    $('#buildyourform').on('submit', 'form', function() {
-      var $submittedForm = $(this);
-      var $forms = $submittedForm.parents('.fieldwrapper').find('form');
-      var serializedForm = $forms.serializeJSON();
-      var json = JSON.stringify(serializedForm);
-      event.preventDefault();
-      $.ajax({
-        url: "/app/new/",
-        type: "post",
-        data: json,
-        contentType:"application/json; charset=utf-8", 
-        success: console.log("Submitted!")
-      })
-    });
 
-    // Removing static summaries:
-    $(".remove_summary").click(function(){
-      var $removeButton = $(this) //remove_summary button
-      var link = $($removeButton).parent().attr("href") // TODO: mygtukas gi bus kitur
+  // adding new forms
+
+
+  $('.addNew').click(function(){ // TODO - increment Topics number at the top / laikas
+    event.preventDefault();
+    var button = $(this);
+    var token = document.getElementById('csrf_token').value;
+    var domain = $(document).find('.domain').text()
+    var subject = $(document).find('.subjectName').text()
+    var lastSummaryPk = $('.buttons:last').find('a').attr('href').match(/(\d+)/)[1];
+    dynamicSummaryPk = parseInt(lastSummaryPk) + 1
+    //alert(subject);
+    $.ajax({
+      url: domain + 'app/' + subject + '/new_dynamic',
+      type: "get",
+      success: function(responseData) {
+        var dynamic_topic_id = responseData.dynamic_topic_id;
+        var dynamic_summary_id = responseData.dynamic_summary_id;
+        var topic = "<form>" + token + "<div class='dynamic'><div class='topic'><div class='expanding-wrapper' style='position:relative'><textarea class='topicTextarea dynExpanding' cols='40' id='animated' name='dynamicTopic' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New topic</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: none; border-width: 8px 0px 0px; border-style: solid; visibility: hidden; min-height: 50px; white-space: pre-wrap; line-height: 35.71428680419922px; text-decoration: none; letter-spacing: 0px; font-size: 25px; font-family: Arimo; font-style: normal; font-weight: 400; text-transform: none; text-align: center; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px; max-height: none;'><span>History topic 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'><div class='buttons'><a href='/app/remove_summary/" + dynamic_summary_id + "'><div class='custom_button white removeSummary dynamic'><i class='fa fa-times deleteSubjectIcon'></i>Remove just this summary</div></a><a href='/app/remove_topic/" + dynamic_topic_id + " '><div class='custom_button white removeTopic dynamicTopicButton' title='Remove topic'><i class='fa fa-times deleteSubjectIcon'></i>Remove topic</div></a></div></div>"
+        var summary = "<div class='summaryContainer'><div class='summaryWrap'><p class='topicDate'>April 11, 2014, 1:51 a.m.</p><!--<input type='submit' value='Submit' class='mygt' /><a href='/app/remove_topic/19'><p class='remove_topic'>Remove topic</p></a>--><br><div class='summary'><div class='expanding-wrapper' style='position:relative'><textarea class='summaryTextarea dynExpanding' cols='40' id='animated' name='dynamicSummary' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New summary</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: block; border: 0px solid; visibility: hidden; min-height: 41px; white-space: pre-wrap; line-height: 37px; text-decoration: none; letter-spacing: 0px; font-size: 18px; font-family: Actor; font-style: normal; font-weight: 400; text-transform: none; text-align: start; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px 18px; max-height: none;'><span>History summary 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'></div><br></div></div>" + "</div></form>"
+
+        $('<div class="hiddenDiv" style="display:none">' + topic + summary + '</div>').appendTo('.editor').slideDown("slow");
+
+        $(".dynExpanding").expanding();
+      }
+    })
+
+})
+
+
+    //removing dynamic summaries:
+    $('html').on('click', '.dynamic', function(){
+      var button = $(this)
+      var link = $(button).parent().attr("href") // TODO: mygtukas gi bus kitur
       $.ajax({
         url: link,
         type: "get",
-        success: console.log("Removed summary!")
+        success: console.log("Removed dynamic summary!")
       })
       event.preventDefault();
-
-      var $txtarea = $(this).parent().prevAll(".summary").find('textarea');
-      var content = "The lecturer is talking about something else? You can start summarizing current topic here.";
+      var $txtarea = $(this).parents(".topic").next().find('textarea');
+      var content = "Start summarizing lecture here . . .";
       $txtarea.val(content);
-    });
+      $txtarea.effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
+    })
 
-    // Removing dynamically summaries:
-    $('#buildyourform').on('click', '.remove_dyn_summary', function() {
+
+    // Removing dynamic topics:
+    $("html").on('click', '.dynamicTopicButton', function(){
       var $removeButton = $(this) //remove_summary button
-      var link = $($removeButton).parent().attr("href") // TODO: mygtukas gi bus kitur
+      alert("clicked on this");
+      var link = $($removeButton).parent().attr("href")
       $.ajax({
         url: link,
         type: "get",
-        success: console.log("Removed summary!")
+        success: console.log("Removed dynamic topic!")
       })
       event.preventDefault();
-    });
 
-    $(document).on('click','#buildyourform:last p.remove_dyn_summary', function() {
-      var $txtarea = $(this).parent().prev().prev().children('textarea.new_dyn_summary'); // why?
-      var content = "The lecturer is talking about something else? You can start summarizing current topic here.";
-      $txtarea.val(content);
-    });
+      if ($removeButton.parents('.hiddenDiv').prev().is('form')){ // if static
+        var $txtarea = $removeButton.parents(".hiddenDiv").find('.summaryTextarea').val();
+        var $prevtxtarea = $removeButton.parents('.editor').find('.static').find('.summaryTextarea:last');
+        $prevtxtarea.val($prevtxtarea.val() + "\n" + $txtarea).change().effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
+       $(this).parents('.hiddenDiv').fadeOut("slow", function() { $(this).remove(); });  
+
+      }
+      else{ // if dynamic
+        var $txtarea = $removeButton.parents(".hiddenDiv").find('.summaryTextarea').val();
+        var $prevtxtarea = $removeButton.parents('.hiddenDiv').prev().find('.summaryTextarea');
+        alert($prevtxtarea.val()); // before
+        $prevtxtarea.val($prevtxtarea.val() + "\n" + $txtarea).change().effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
+        $(this).parents('.hiddenDiv').fadeOut("slow", function() { $(this).remove(); });
+
+      }
+
+
+       
+     });
+
+
 
     // Removing static topics:
-    $(".remove_topic").click(function(){
-      var $removeButton = $(this) //remove_summary button
-      var link = $($removeButton).parent().attr("href") // TODO: mygtukas gi bus kitur
+    $(".removeTopic").click(function(){
+      var $removeButton = $(this)
+      var link = $($removeButton).parent().attr("href")
       $.ajax({
         url: link,
         type: "get",
@@ -304,16 +347,66 @@ $(document).ready(function(){
       })
       event.preventDefault();
 
-      $(this).parent().prevAll(".topic:first").hide("slow")
-      $(this).parent().nextAll(".summary:first").hide("slow")
+      var $txtarea = $(this).parents(".topic").next().find('textarea').val();
+      var $prevtxtarea = $(this).parents('.topic').prev().find('.summaryTextarea');
+
+      //alert($prevtxtarea.val()); // val be4 change
+
+      $prevtxtarea.val($prevtxtarea.val() + "\n" + $txtarea).change().effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
+
+      //alert($prevtxtarea.val()); // val after change
+      
+      $(this).parents('.topic').next().fadeOut("slow", function() { $(this).remove(); });
+      $(this).parents('.topic').fadeOut("slow", function() { $(this).remove(); });  
+
     });
 
 
- 
-    
-});
+    $('.removeTopic').first().off('click'); // initial Topic
+
+
+
+    // Removing static summaries:
+    $(".removeSummary").click(function(event){
+      event.preventDefault();
+      var $removeButton = $(this) //remove_summary button
+      var link = $($removeButton).parent().attr("href") // TODO: mygtukas gi bus kitur
+      $.ajax({
+        url: link,
+        type: "get",
+        success: console.log("Removed summary!")
+      })
+      event.preventDefault();
+      var $txtarea = $(this).parents(".topic").next().find('textarea');
+      var content = "Start summarizing lecture here . . .";
+      $txtarea.val(content);
+      $txtarea.effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
+    });
+
 
     
-    
+      // submitting the new forms via Ajax:
+      $('#buildyourform').on('submit', 'form', function() {
+        var $submittedForm = $(this);
+        var $forms = $submittedForm.parents('.fieldwrapper').find('form');
+        var serializedForm = $forms.serializeJSON();
+        var json = JSON.stringify(serializedForm);
+        event.preventDefault();
+        $.ajax({
+          url: "/app/new/",
+          type: "post",
+          data: json,
+          contentType:"application/json; charset=utf-8", 
+          success: console.log("Submitted!")
+        })
+      });
 
-   
+
+
+
+    });
+
+
+
+
+

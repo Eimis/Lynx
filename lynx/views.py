@@ -89,12 +89,15 @@ def Logout(request):
 
 @login_required(redirect_field_name=None)
 def App(request, slug):
+	current_site = Site.objects.get_current()
+	domain = current_site.domain
 	User = get_user_model() # custom user
 	user = request.user
 	lectures = user.lecture_set.all().count()
 	subject = Subject.objects.get(user=request.user, slug=slug) # from url
 	subjects = Subject.objects.filter(user=request.user)
 	topics = Topic.objects.filter(subject = subject.pk)
+	topicCount = Topic.objects.filter(subject = subject.pk).count()
 	summaries = Summary.objects.filter(subject = subject.pk)
 	subject_list = []
 	for x in subjects:
@@ -131,7 +134,7 @@ def App(request, slug):
 			pk_list.append(x.instance.pk)
 			pk_list.append(y.instance.pk)
 
-	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject_list" : subject_list, "slug" : slug, "topics" : topics,})
+	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject_list" : subject_list, "slug" : slug, "topics" : topics, "topicCount" : topicCount, "domain" : domain})
 
 
 @login_required(redirect_field_name=None)
@@ -162,7 +165,7 @@ def Remove_topic_d(request, id): # (d = dashboard)
 
 
 
-def Update_subject(request, id):
+def Update_subject(request, id): # dashboard
 	User = get_user_model() # custom user
 	user = request.user
 	subject = Subject.objects.get(user = user, pk=id)
@@ -171,7 +174,7 @@ def Update_subject(request, id):
 	subject.save()
 	return HttpResponse(subject) # 4 testing only
 
-def Update_topic(request, id):
+def Update_topic(request, id): # dashboard
 	User = get_user_model() # custom user
 	user = request.user
 	topic = Topic.objects.get(user = user, pk=id)
@@ -204,9 +207,65 @@ def New(request): # create new Topic and Summary
 
 
 @login_required(redirect_field_name=None)
+def New_dynamic(request, slug): # create new DYNAMIC Topic and Summary 'in background'
+	User = get_user_model() # custom user
+	user = request.user
+	subject = Subject.objects.get(user=request.user, slug=slug)
+	if request.is_ajax():
+		topic = Topic(subject = subject, user = user, name = "New topic")
+		topic.save()
+		summary = Summary(subject = subject, user = user, topic = topic, content = "New summary")
+		summary.save()
+		json = simplejson.dumps({'dynamic_topic_id': topic.id, 'dynamic_summary_id': summary.id})
+	else:
+		return HttpResponse("Something's wrong") # not possible?
+	return HttpResponse(json, mimetype='application/json')
+
+
+
+@login_required(redirect_field_name=None)
+def Save_dynamic(request, slug):
+	User = get_user_model() # custom user
+	user = request.user
+	subject = Subject.objects.get(user = user, slug = slug)
+	topic = Topic.objects.get(user = user, subject = subject)
+	summary = Summary.objects.get(user, subject = subject, topic = topic)
+
+	topic.name = request.POST['dynamicTopic']
+	summary.content = request.POST['dynamicSummary']
+	topic.save()
+	summary.save()
+	return HttpResponse(subject) # 4 testing only
+
+
+
+#####################################
+
+def Update_subject(request, id): # dashboard
+	User = get_user_model() # custom user
+	user = request.user
+	subject = Subject.objects.get(user = user, pk=id)
+	subject_title = request.POST['value']
+	subject.title = subject_title
+	subject.save()
+	return HttpResponse(subject) # 4 testing only
+
+def Update_topic(request, id): # dashboard
+	User = get_user_model() # custom user
+	user = request.user
+	topic = Topic.objects.get(user = user, pk=id)
+	topic_name = request.POST['value']
+	topic.name = topic_name
+	topic.save()
+	return HttpResponse("ok") # 4 testing only
+
+#####################################
+
+
+@login_required(redirect_field_name=None)
 def Remove_summary(request, id):
 	summary = Summary.objects.get(pk=id)
-	summary.content = "The lecturer is talking about something else? You can start summarizing current topic here." # TODO: exc. from search
+	summary.content = "Start summarizing lecture here . . ." # TODO: exc. from search
 	summary.save()
 	return render (request, "app.html",)
 
@@ -231,7 +290,7 @@ def Remove_topic(request, id):
 	# Merging summaries:
 	topic = Topic.objects.get(pk=id)
 	topicPk = topic.pk
-	summary = Summary.objects.get(pk = topicPk)
+	summary = Summary.objects.get(topic = topic)
 	topicPkIndex = pk_list.index(topicPk)
 	previousSummaryPk = pk_list[topicPkIndex - 1]
 	previousSummary = Summary.objects.get(pk = previousSummaryPk)

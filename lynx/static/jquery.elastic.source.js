@@ -87,7 +87,7 @@
 				// Sets a given height and overflow state on the textarea
 				function setHeightAndOverflow(height, overflow){
 				
-					var curratedHeight = Math.floor(parseInt(height,10));
+					var curratedHeight = Math.floor(parseInt(height,10)); // Lynx
 					if($textarea.height() !== curratedHeight){
 						$textarea.css({'height': curratedHeight + 'px','overflow':overflow});
 					}
