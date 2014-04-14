@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, render_to_response
 from django import forms
 from lynx.models import Lecture, Topic, Summary, Subject
@@ -7,8 +8,14 @@ from django.forms.formsets import formset_factory;
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import View
 from django.views.generic.edit import UpdateView
+
 import json
 from django.utils import simplejson
+from django.core.serializers.json import DjangoJSONEncoder
+from django.utils import formats
+import datetime
+
+
 from django.forms.models import modelformset_factory
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 #from django.contrib.auth.models import User
@@ -134,7 +141,7 @@ def App(request, slug):
 			pk_list.append(x.instance.pk)
 			pk_list.append(y.instance.pk)
 
-	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject_list" : subject_list, "slug" : slug, "topics" : topics, "topicCount" : topicCount, "domain" : domain})
+	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject_list" : subject_list, "slug" : slug, "topics" : topics, "topicCount" : topicCount, "domain" : domain, "subject" : subject})
 
 
 @login_required(redirect_field_name=None)
@@ -143,6 +150,10 @@ def New_subject(request):
 	user = request.user
 	new_subject = Subject(title = request.POST['subject_title'], user = user)
 	new_subject.save()
+	topic = Topic(user = user, subject = new_subject, name = "Your first topic")
+	topic.save()
+	summary = Summary(user = user, subject = new_subject, topic = topic, content = "This is your very first summary.")
+	summary.save()
 	return HttpResponseRedirect("/dashboard/")
 
 @login_required(redirect_field_name=None)
@@ -188,6 +199,16 @@ def Subject_count(request):
 	subjectCount = user.subject_set.count()
 	return HttpResponse(simplejson.dumps(subjectCount), mimetype='application/json')
 
+def Topic_count(request, slug):
+	user = request.user
+	slug = slug
+	subject = Subject.objects.get(user=request.user, slug=slug)
+	topicCount = Topic.objects.filter(user = user, subject = subject).count()
+	if request.is_ajax():
+		json = simplejson.dumps({'topicCount': topicCount})
+		return HttpResponse(json, mimetype='application/json')
+	else:
+		return HttpResponseRedirect('/dashboard/')
 
 
 @login_required(redirect_field_name=None)
@@ -216,10 +237,14 @@ def New_dynamic(request, slug): # create new DYNAMIC Topic and Summary 'in backg
 		topic.save()
 		summary = Summary(subject = subject, user = user, topic = topic, content = "New summary")
 		summary.save()
-		json = simplejson.dumps({'dynamic_topic_id': topic.id, 'dynamic_summary_id': summary.id})
+		topicCount = Topic.objects.filter(user = user, subject = subject).count()
+		# date serialization
+		topicDate = datetime.datetime.now()
+		serialized_datetime = formats.date_format(topicDate, 'DATETIME_FORMAT')
+		data = json.dumps({'dynamic_topic_id': topic.id, 'dynamic_summary_id': summary.id, "topicCount" : topicCount, "topicDate" : topicDate, "serialized_datetime" : serialized_datetime}, cls=DjangoJSONEncoder)
 	else:
-		return HttpResponse("Something's wrong") # not possible?
-	return HttpResponse(json, mimetype='application/json')
+		return HttpResponseRedirect("/dashboard/") # not possible?
+	return HttpResponse(data, mimetype='application/json')
 
 
 
@@ -239,28 +264,6 @@ def Save_dynamic(request, slug):
 
 
 
-#####################################
-
-def Update_subject(request, id): # dashboard
-	User = get_user_model() # custom user
-	user = request.user
-	subject = Subject.objects.get(user = user, pk=id)
-	subject_title = request.POST['value']
-	subject.title = subject_title
-	subject.save()
-	return HttpResponse(subject) # 4 testing only
-
-def Update_topic(request, id): # dashboard
-	User = get_user_model() # custom user
-	user = request.user
-	topic = Topic.objects.get(user = user, pk=id)
-	topic_name = request.POST['value']
-	topic.name = topic_name
-	topic.save()
-	return HttpResponse("ok") # 4 testing only
-
-#####################################
-
 
 @login_required(redirect_field_name=None)
 def Remove_summary(request, id):
@@ -271,12 +274,13 @@ def Remove_summary(request, id):
 
 
 @login_required(redirect_field_name=None)
-def Remove_topic(request, id):
+def Remove_topic(request, slug, id):
 	# from App view:
 	TopicFormSet = modelformset_factory(Topic, extra=0, can_delete=False)
 	SummaryFormSet = modelformset_factory(Summary, extra=0)
-	tquery = Topic.objects.all().order_by('date')
-	squery = Summary.objects.all().order_by('date')
+	subject = Subject.objects.get(user=request.user, slug=slug)
+	tquery = Topic.objects.filter(user = request.user, subject = subject).order_by('date')
+	squery = Summary.objects.filter(user = request.user, subject = subject).order_by('date')
 	t_formset = TopicFormSet(queryset = tquery)
 	s_formset = SummaryFormSet(queryset = squery)
 	zipped = zip(t_formset.forms, s_formset.forms)
@@ -297,13 +301,20 @@ def Remove_topic(request, id):
 	previousSummary.content = previousSummary.content + "\n" + summary.content
 	previousSummary.save()
 
-	#  TODO: warning
+	#  TODO: warning?
 	topic.delete()
 	summary.delete()
-	return render (request, "app.html", {"pk_list" : pk_list})
 
+	# Ajax stuff
+	topicCount = Topic.objects.filter(user = request.user, subject = subject).count()
+	if request.is_ajax():
+		json = simplejson.dumps({'topicCount': topicCount})
+		return HttpResponse(json, mimetype='application/json')
+	else:
+		return HttpResponseRedirect('/dashboard/')
 
+def Save_static_topics(request):
+	if request.is_ajax:
+		test = "Request successfull (Django)"
+		return HttpResponse(test, mimetype='application/json')
 
-@login_required(redirect_field_name=None)
-def remove_summary_inline(request, id):
-	pass

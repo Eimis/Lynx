@@ -7,7 +7,7 @@
 	<script src="{{ STATIC_URL }}app.js"></script>
 	<script src="{{ STATIC_URL }}expanding.js"></script>
 	<link rel="stylesheet" href="{{ STATIC_URL }}app.css" content-type: text/css/>
-	
+
 	<!--<script src="{{ STATIC_URL }}jquery.autosize.js"></script>-->
 	<input id="csrf_token" value="{% csrf_token %}"/>
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" content-type: text/css />
@@ -40,13 +40,13 @@
 			</a>
 		</div>
 		<!--************ 2 **********-->
-		<div class="col-md-4 midbar"><p class="midbar">{{ slug|capfirst }}</p><div class="stats"><p>Topics: </p>{{ topicCount }}</div><div class="stats" style="margin-left: 0;"><a href="#"><div class="custom_button green addNew"><i class="fa fa-plus deleteSubjectIcon"></i> Add new</div></div></div>
+		<div class="col-md-4 midbar"><p class="midbar">{{ slug|capfirst }}</p><div class="stats"><p class="topicCount"></p></div><div class="stats" style="margin-left: 0;"><a href="#"><div class="custom_button green addNew"><i class="fa fa-plus deleteSubjectIcon"></i> Add new</div></div></div>
 	<!--************ 3 **********-->
 	<div class="col-md-4 rightbar topright">
 		<span class="helper"></span>
 		<a href="#"><p style="display: inline-block;"></p></a>
-		<div class="exportBox"><p><span class="glyphicon glyphicon-share-alt"></span></p></div>
-		<div class="exportBox"><p><span class="glyphicon glyphicon-floppy-save"></span></p></div>
+		<div class="exportBox"><p><span class="glyphicon glyphicon-share-alt share" original-title ="Share"></span></p></div>
+		<div class="exportBox"><p><span class="glyphicon glyphicon-floppy-save export" title="Export to PDF"></span></p></div>
 
 
 	</div>
@@ -87,7 +87,7 @@
 			</div>
 		</a>
 
-			<a href="/app/remove_topic/{{ topic.instance.pk }}">
+			<a href="/app/remove_topic/{{ slug }}/{{ topic.instance.pk }}">
 			<div class="custom_button white removeTopic" title="Remove topic">
 				<i class="fa fa-times deleteSubjectIcon"></i>
 				Remove topic
@@ -98,7 +98,7 @@
 		</div>
 	</div>
 	<div class="summaryContainer">
-	<div class = "summaryWrap"><p class = "topicDate">{{ topic.instance.date }}</p>
+	<div class = "summaryWrap"><p class = "topicDate">{{ topic.instance.date|date:'DATETIME_FORMAT'}}</p>
 
 			<!--<input type="submit" value="Submit" class="mygt" />
 			<a href="/app/remove_topic/{{ topic.instance.pk }}"><p class="remove_topic">Remove topic</p></a>-->

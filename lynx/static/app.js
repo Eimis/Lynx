@@ -195,16 +195,61 @@ $(document).ready(function(){
 }(jQuery));
 
 
-//Dynamically add new forms:
+// Lynx app js:
 
 
 $(document).ready(function(){
+
+  var test = document.getElementById(".removeTopic");
+  alert(test.val())
+
+
+  function saveStaticTopics(textArea, callback, delay) {
+      var timer = null;
+      textArea.onkeypress = function() {
+        if (timer) {
+          window.clearTimeout(timer);
+        }
+        timer = window.setTimeout( function() {
+          timer = null;
+          callback();
+        }, delay );
+      };
+      textArea = null;
+    }
+
+
+
+    function saveStaticTopicsAjax(){
+      var subject = $(document).find('.subjectName').text()
+      var domain = $(document).find('.domain').text()
+      $.ajax({
+        url: domain + subject + "/save_static_topics",
+        type: "get",
+        success: console.log("connected to django")
+      })
+    }
+
+    saveStaticTopics(document.getElementById(".summaryTextarea"), saveStaticTopicsAjax, 1000);
+
+
+
 
   $(document).on('click', '.buttons', function(e){
     e.preventDefault();
   })
 
-
+  // get topic count of Subject
+  var subject = $(document).find('.subjectName').text()
+  var domain = $(document).find('.domain').text()
+  $.ajax({
+    url: domain + 'app/' + subject + '/topic_count',
+    type: "get",
+    success: function(responseData) {
+      var topicCount = responseData.topicCount;
+      $(".topicCount").html("Topics: " + topicCount)
+    }
+  })
 
   $(function() {
    $('a[rel=tipsy]').tipsy({fade: true, gravity: 'n'});
@@ -212,50 +257,10 @@ $(document).ready(function(){
 
   $('.removeTopic').first().attr('title', "You can't remove initial topic")
   $('.removeTopic').first().tipsy();
+  $('.share').tipsy({gravity: 'ne'});
+  $('.export').tipsy({gravity: 'ne'});
   $('.removeTopic').first().parent().attr('href', '#');
 
-    // adding new forms
-    /*$("#add").click(function() {
-      var intId = $("#buildyourform div").length + 1;
-      var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/><br>");
-        var $staticSummaryPk = $(this).parent().find('a').last().attr("href").match(/(\d+)/)[1]; // previous static Summary's PK
-        var $dynamicSummaryPk = parseInt($staticSummaryPk, 10) + 1
-
-        // Adding 2 new forms:
-        var topic = $( '<form action = "#" method = "POST" name="new_topic" class="new_topic">'+ document.getElementById('csrf_token').value +
-          '<textarea id ="1" name="name" maxlength="1000" cols="25" rows="6" id="new_form"></textarea>' +
-          '<br>' + 
-          '<input type="submit" value="Submit" class="newMygt" />' + 
-          '</form>' +
-          '<br>' +
-          '<a href="/app/remove_topic/' + $dynamicSummaryPk + '">' + 
-          '<p class="remove_dyn_topic">Remove dynamic topic</p>' + 
-          '</a>'
-          );
-
-
-        var summary = $('<br>' + 
-          '<form action = "#" method = "POST" name="new_summary" class="new_summary">'+ document.getElementById('csrf_token').value +
-          '<textarea id="2" name="content" maxlength="1000" cols="25" rows="6" id="new_form" class="new_dyn_summary"></textarea>' + 
-          '<br>' + 
-          '<input type="submit" value="Submit" class="newMygt" />' + 
-          '</form>' + 
-          '<br>' + 
-          '<a href="/app/remove_summary/' + $dynamicSummaryPk + '">' + 
-          '<p class="remove_dyn_summary">Remove dynamic summary</p>' + 
-          '</a>'
-          );
-        
-
-        (topic).appendTo(fieldWrapper).show('slow'); // TODO
-        (summary).appendTo(fieldWrapper).show('slow');
-        $("#buildyourform").append(fieldWrapper);
-
-
-      });*/
-
-
-  // adding new forms
 
 
   $('.addNew').click(function(){ // TODO - increment Topics number at the top / laikas
@@ -273,14 +278,21 @@ $(document).ready(function(){
       success: function(responseData) {
         var dynamic_topic_id = responseData.dynamic_topic_id;
         var dynamic_summary_id = responseData.dynamic_summary_id;
-        var topic = "<form>" + token + "<div class='dynamic'><div class='topic'><div class='expanding-wrapper' style='position:relative'><textarea class='topicTextarea dynExpanding' cols='40' id='animated' name='dynamicTopic' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New topic</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: none; border-width: 8px 0px 0px; border-style: solid; visibility: hidden; min-height: 50px; white-space: pre-wrap; line-height: 35.71428680419922px; text-decoration: none; letter-spacing: 0px; font-size: 25px; font-family: Arimo; font-style: normal; font-weight: 400; text-transform: none; text-align: center; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px; max-height: none;'><span>History topic 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'><div class='buttons'><a href='/app/remove_summary/" + dynamic_summary_id + "'><div class='custom_button white removeSummary dynamic'><i class='fa fa-times deleteSubjectIcon'></i>Remove just this summary</div></a><a href='/app/remove_topic/" + dynamic_topic_id + " '><div class='custom_button white removeTopic dynamicTopicButton' title='Remove topic'><i class='fa fa-times deleteSubjectIcon'></i>Remove topic</div></a></div></div>"
-        var summary = "<div class='summaryContainer'><div class='summaryWrap'><p class='topicDate'>April 11, 2014, 1:51 a.m.</p><!--<input type='submit' value='Submit' class='mygt' /><a href='/app/remove_topic/19'><p class='remove_topic'>Remove topic</p></a>--><br><div class='summary'><div class='expanding-wrapper' style='position:relative'><textarea class='summaryTextarea dynExpanding' cols='40' id='animated' name='dynamicSummary' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New summary</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: block; border: 0px solid; visibility: hidden; min-height: 41px; white-space: pre-wrap; line-height: 37px; text-decoration: none; letter-spacing: 0px; font-size: 18px; font-family: Actor; font-style: normal; font-weight: 400; text-transform: none; text-align: start; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px 18px; max-height: none;'><span>History summary 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'></div><br></div></div>" + "</div></form>"
+        var subject = $(document).find('.subjectName').text()
+        var topicCount = responseData.topicCount;
+        var topicDate = responseData.serialized_datetime;
+        var topic = "<form>" + token + "<div class='dynamic'><div class='topic'><div class='expanding-wrapper' style='position:relative'><textarea class='topicTextarea dynExpanding' cols='40' id='animated' name='dynamicTopic' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New topic</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: none; border-width: 8px 0px 0px; border-style: solid; visibility: hidden; min-height: 50px; white-space: pre-wrap; line-height: 35.71428680419922px; text-decoration: none; letter-spacing: 0px; font-size: 25px; font-family: Arimo; font-style: normal; font-weight: 400; text-transform: none; text-align: center; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px; max-height: none;'><span>History topic 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'><div class='buttons'><a href='/app/remove_summary/" + dynamic_summary_id + "'><div class='custom_button white removeSummary dynamic'><i class='fa fa-times deleteSubjectIcon'></i>Remove just this summary</div></a><a href='/app/remove_topic/" + subject + "/" + dynamic_topic_id + " '><div class='custom_button white removeTopic dynamicTopicButton' title='Remove topic'><i class='fa fa-times deleteSubjectIcon'></i>Remove topic</div></a></div></div>"
+        var summary = "<div class='summaryContainer'><div class='summaryWrap'><p class='topicDate'>" + topicDate + "</p><!--<input type='submit' value='Submit' class='mygt' /><a href='/app/remove_topic/19'><p class='remove_topic'>Remove topic</p></a>--><br><div class='summary'><div class='expanding-wrapper' style='position:relative'><textarea class='summaryTextarea dynExpanding' cols='40' id='animated' name='dynamicSummary' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New summary</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: block; border: 0px solid; visibility: hidden; min-height: 41px; white-space: pre-wrap; line-height: 37px; text-decoration: none; letter-spacing: 0px; font-size: 18px; font-family: Actor; font-style: normal; font-weight: 400; text-transform: none; text-align: start; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px 18px; max-height: none;'><span>History summary 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'></div><br></div></div>" + "</div></form>"
 
         $('<div class="hiddenDiv" style="display:none">' + topic + summary + '</div>').appendTo('.editor').slideDown("slow");
 
         $(".dynExpanding").expanding();
+        //alert(topicCount);
+        $(".topicCount").html("Topics: " + topicCount)
       }
     })
+
+
 
 })
 
@@ -305,12 +317,15 @@ $(document).ready(function(){
     // Removing dynamic topics:
     $("html").on('click', '.dynamicTopicButton', function(){
       var $removeButton = $(this) //remove_summary button
-      alert("clicked on this");
       var link = $($removeButton).parent().attr("href")
       $.ajax({
         url: link,
         type: "get",
-        success: console.log("Removed dynamic topic!")
+        success: function(responseData) {
+          var topicCount = responseData.topicCount;
+          $(".topicCount").html("Topics: " + topicCount)
+          $(".topicCount").html("Topics: " + topicCount)
+        }
       })
       event.preventDefault();
 
@@ -318,21 +333,21 @@ $(document).ready(function(){
         var $txtarea = $removeButton.parents(".hiddenDiv").find('.summaryTextarea').val();
         var $prevtxtarea = $removeButton.parents('.editor').find('.static').find('.summaryTextarea:last');
         $prevtxtarea.val($prevtxtarea.val() + "\n" + $txtarea).change().effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
-       $(this).parents('.hiddenDiv').fadeOut("slow", function() { $(this).remove(); });  
+         $(this).parents('.hiddenDiv').fadeOut("slow", function() { $(this).remove(); });  
 
-      }
+       }
       else{ // if dynamic
         var $txtarea = $removeButton.parents(".hiddenDiv").find('.summaryTextarea').val();
         var $prevtxtarea = $removeButton.parents('.hiddenDiv').prev().find('.summaryTextarea');
         alert($prevtxtarea.val()); // before
         $prevtxtarea.val($prevtxtarea.val() + "\n" + $txtarea).change().effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
-        $(this).parents('.hiddenDiv').fadeOut("slow", function() { $(this).remove(); });
+          $(this).parents('.hiddenDiv').fadeOut("slow", function() { $(this).remove(); });
 
-      }
+        }
 
 
-       
-     });
+
+      });
 
 
 
@@ -343,7 +358,10 @@ $(document).ready(function(){
       $.ajax({
         url: link,
         type: "get",
-        success: console.log("Removed topic!")
+        success: function(responseData) {
+          var topicCount = responseData.topicCount;
+          $(".topicCount").html("Topics: " + topicCount)
+        }
       })
       event.preventDefault();
 
@@ -381,30 +399,9 @@ $(document).ready(function(){
       var content = "Start summarizing lecture here . . .";
       $txtarea.val(content);
       $txtarea.effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
-    });
+    })
 
-
-    
-      // submitting the new forms via Ajax:
-      $('#buildyourform').on('submit', 'form', function() {
-        var $submittedForm = $(this);
-        var $forms = $submittedForm.parents('.fieldwrapper').find('form');
-        var serializedForm = $forms.serializeJSON();
-        var json = JSON.stringify(serializedForm);
-        event.preventDefault();
-        $.ajax({
-          url: "/app/new/",
-          type: "post",
-          data: json,
-          contentType:"application/json; charset=utf-8", 
-          success: console.log("Submitted!")
-        })
-      });
-
-
-
-
-    });
+  });
 
 
 

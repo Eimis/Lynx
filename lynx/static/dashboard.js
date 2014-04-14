@@ -149,7 +149,7 @@ $(document).ready(function(){
     
     
 
-    $('#username2').editable({
+    $('#username2').editable({ //testing
     	type: 'text',
     	pk: 2,
     	url: '/post',
