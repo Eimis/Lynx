@@ -20,8 +20,8 @@ class SummaryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SummaryForm, self).__init__(*args, **kwargs)
-        self.fields['content'].widget = forms.Textarea(attrs={ 'class': 'summaryTextarea expanding', 'rows' : '1', 'id' : 'animated' })
-
+        self.fields['content'].widget = forms.Textarea(attrs={ 'class': 'summaryTextarea expanding', 'rows' : '1', 'id' : 'animated', 'name' : 'summary' })
+        self.fields['content'] = User.summary_set.all()
 
 
 

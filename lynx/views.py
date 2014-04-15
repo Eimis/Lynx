@@ -30,7 +30,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.views import password_reset, password_reset_confirm
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
-
+from django.db import transaction, connection
 
 
 
@@ -109,39 +109,24 @@ def App(request, slug):
 	subject_list = []
 	for x in subjects:
 		subject_list.append(x.title.lower()) # slugs are all lowercased
-	TopicFormSet = modelformset_factory(Topic, form=TopicForm, extra=0, fields=('name',), can_delete=False)
-	SummaryFormSet = modelformset_factory(Summary, form=SummaryForm, extra=0, fields=('content',), can_delete=False)
+	TopicFormSet = modelformset_factory(Topic, form=TopicForm, extra=0, fields=('name',), can_delete=True)
+	SummaryFormSet = modelformset_factory(Summary, form=SummaryForm, extra=0, fields=('content',), can_delete=True)
 	tquery = user.topic_set.all().order_by('date')
 	squery = user.summary_set.all().order_by('date')
+	t_formset = TopicFormSet(queryset = topics)
+	s_formset = SummaryFormSet(queryset = summaries)
+	zipped = zip(t_formset.forms, s_formset.forms)
 	
 	# saving formsets:
 	if request.method == 'POST' and request.is_ajax():
-		t_formset = TopicFormSet(request.POST)
-		s_formset = SummaryFormSet(request.POST) # formset instances. Apkeisti ???
-		if t_formset.is_valid() and s_formset.is_valid():
-			t_formset.save() and s_formset.save()
-			#  Saving them with new data.
-			#  BUG #1: neina issaugoti vien tik summary, reikia pakeisti ir topic...
-			#  SOLUTION?: http://stackoverflow.com/questions/13745343/django-formsets-confusion-validation-required-empty-permitted
-			#  BUG # 2: Kai istrini tik summary / topic, neina issaugoti nieko (skiriasi formu id headeryje). Dropdb padeda.
-			zipped = zip(t_formset.forms, s_formset.forms) # saving them with new data
-			pk_list = {}
-			for x,y in zipped:
-				pk_list[x.instance.pk] = y.instance.pk
-			
-		else:
-			return HttpResponse("not valid formsets, dude") # for testing purposes
-	else: # request=GET
-		t_formset = TopicFormSet(queryset = topics)
-		s_formset = SummaryFormSet(queryset = summaries)
-		zipped = zip(t_formset.forms, s_formset.forms)
-		# 4 testing:
-		pk_list = []
-		for x,y in zipped:
-			pk_list.append(x.instance.pk)
-			pk_list.append(y.instance.pk)
+		Topic.objects.update()
+		Summary.objects.update()
+		t_formset = TopicFormSet(request.POST, queryset = user.topic_set.all())
+		s_formset = SummaryFormSet(request.POST, queryset = user.summary_set.all()) # formset instances
+		s_formset.save()
+		t_formset.save()
 
-	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery, "pk_list" : pk_list,  "subject_list" : subject_list, "slug" : slug, "topics" : topics, "topicCount" : topicCount, "domain" : domain, "subject" : subject})
+	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery,   "subject_list" : subject_list, "slug" : slug, "topics" : topics, "topicCount" : topicCount, "domain" : domain, "subject" : subject})
 
 
 @login_required(redirect_field_name=None)
@@ -165,14 +150,6 @@ def Remove_subject(request, id):
 	subjectCount = user.subject_set.count()
 	return render(request, "dashboard.html") # not p. ?
 
-
-@login_required(redirect_field_name=None)
-def Remove_topic_d(request, id): # (d = dashboard)
-	User = get_user_model() # custom user
-	user = request.user
-	topic = Topic.objects.get(user = user, pk=id)
-	topic.delete()
-	return render(request, "dashboard.html") # not p. ?
 
 
 
@@ -276,8 +253,8 @@ def Remove_summary(request, id):
 @login_required(redirect_field_name=None)
 def Remove_topic(request, slug, id):
 	# from App view:
-	TopicFormSet = modelformset_factory(Topic, extra=0, can_delete=False)
-	SummaryFormSet = modelformset_factory(Summary, extra=0)
+	TopicFormSet = modelformset_factory(Topic, extra=0, can_delete=True)
+	SummaryFormSet = modelformset_factory(Summary, extra=0, can_delete=True)
 	subject = Subject.objects.get(user=request.user, slug=slug)
 	tquery = Topic.objects.filter(user = request.user, subject = subject).order_by('date')
 	squery = Summary.objects.filter(user = request.user, subject = subject).order_by('date')

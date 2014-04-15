@@ -197,40 +197,47 @@ $(document).ready(function(){
 
 // Lynx app js:
 
+//remove static topic - edit existing static summary - internl
+
 
 $(document).ready(function(){
 
-  var test = document.getElementById(".removeTopic");
-  alert(test.val())
+  // saving static Topics
+  $(".topicTextarea").bindWithDelay("keypress keydown", function(){
+    var subject = $(document).find('.subjectName').text()
+    serializedData = $("form").serialize();
+    $.ajax({
+    url: domain + 'app/' + subject + '/',
+    type: "post",
+    data: serializedData,
+    csrfmiddlewaretoken:'{{ csrf_token }}',
+    success: console.log('Saved static topic')
+  })
+    }, 500, true);
+
+  // saving static Summaries
+  $(".summaryTextarea").bindWithDelay("keypress keydown", function(){
+    var subject = $(document).find('.subjectName').text()
+    serializedData = $("form").serialize();
+    $.ajax({
+    url: domain + 'app/' + subject + '/',
+    type: "post",
+    data: serializedData,
+    csrfmiddlewaretoken:'{{ csrf_token }}',
+    success: console.log('Saved static summary')
+  })
+    }, 1000, true);
 
 
-  function saveStaticTopics(textArea, callback, delay) {
-      var timer = null;
-      textArea.onkeypress = function() {
-        if (timer) {
-          window.clearTimeout(timer);
-        }
-        timer = window.setTimeout( function() {
-          timer = null;
-          callback();
-        }, delay );
-      };
-      textArea = null;
-    }
+  // saving dynamic Summaries
+  $(document).on('click', '.dynamicSummary', function(){ // because dynamic
+    $(this).bindWithDelay("keypress keydown", function(){
 
 
+    console.log('Focused on dyn. Summary');
 
-    function saveStaticTopicsAjax(){
-      var subject = $(document).find('.subjectName').text()
-      var domain = $(document).find('.domain').text()
-      $.ajax({
-        url: domain + subject + "/save_static_topics",
-        type: "get",
-        success: console.log("connected to django")
-      })
-    }
-
-    saveStaticTopics(document.getElementById(".summaryTextarea"), saveStaticTopicsAjax, 1000);
+    }, 500, true);
+  })
 
 
 
@@ -281,14 +288,33 @@ $(document).ready(function(){
         var subject = $(document).find('.subjectName').text()
         var topicCount = responseData.topicCount;
         var topicDate = responseData.serialized_datetime;
-        var topic = "<form>" + token + "<div class='dynamic'><div class='topic'><div class='expanding-wrapper' style='position:relative'><textarea class='topicTextarea dynExpanding' cols='40' id='animated' name='dynamicTopic' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New topic</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: none; border-width: 8px 0px 0px; border-style: solid; visibility: hidden; min-height: 50px; white-space: pre-wrap; line-height: 35.71428680419922px; text-decoration: none; letter-spacing: 0px; font-size: 25px; font-family: Arimo; font-style: normal; font-weight: 400; text-transform: none; text-align: center; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px; max-height: none;'><span>History topic 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'><div class='buttons'><a href='/app/remove_summary/" + dynamic_summary_id + "'><div class='custom_button white removeSummary dynamic'><i class='fa fa-times deleteSubjectIcon'></i>Remove just this summary</div></a><a href='/app/remove_topic/" + subject + "/" + dynamic_topic_id + " '><div class='custom_button white removeTopic dynamicTopicButton' title='Remove topic'><i class='fa fa-times deleteSubjectIcon'></i>Remove topic</div></a></div></div>"
-        var summary = "<div class='summaryContainer'><div class='summaryWrap'><p class='topicDate'>" + topicDate + "</p><!--<input type='submit' value='Submit' class='mygt' /><a href='/app/remove_topic/19'><p class='remove_topic'>Remove topic</p></a>--><br><div class='summary'><div class='expanding-wrapper' style='position:relative'><textarea class='summaryTextarea dynExpanding' cols='40' id='animated' name='dynamicSummary' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New summary</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: block; border: 0px solid; visibility: hidden; min-height: 41px; white-space: pre-wrap; line-height: 37px; text-decoration: none; letter-spacing: 0px; font-size: 18px; font-family: Actor; font-style: normal; font-weight: 400; text-transform: none; text-align: start; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px 18px; max-height: none;'><span>History summary 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'></div><br></div></div>" + "</div></form>"
+        var topic = "<form>" + token + "<div class='dynamic'><div class='topic'><div class='expanding-wrapper' style='position:relative'><textarea class='topicTextarea dynExpanding dynamicTopic' cols='40' id='animated' name='dynamicTopic' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New topic</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: none; border-width: 8px 0px 0px; border-style: solid; visibility: hidden; min-height: 50px; white-space: pre-wrap; line-height: 35.71428680419922px; text-decoration: none; letter-spacing: 0px; font-size: 25px; font-family: Arimo; font-style: normal; font-weight: 400; text-transform: none; text-align: center; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px; max-height: none;'><span>History topic 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'><div class='buttons'><a href='/app/remove_summary/" + dynamic_summary_id + "'><div class='custom_button white removeSummary dynamic'><i class='fa fa-times deleteSubjectIcon'></i>Remove just this summary</div></a><a href='/app/remove_topic/" + subject + "/" + dynamic_topic_id + " '><div class='custom_button white removeTopic dynamicTopicButton' title='Remove topic'><i class='fa fa-times deleteSubjectIcon'></i>Remove topic</div></a></div></div>"
+        var summary = "<div class='summaryContainer'><div class='summaryWrap'><p class='topicDate'>" + topicDate + "</p><!--<input type='submit' value='Submit' class='mygt' /><a href='/app/remove_topic/19'><p class='remove_topic'>Remove topic</p></a>--><br><div class='summary'><div class='expanding-wrapper' style='position:relative'><textarea class='summaryTextarea dynExpanding dynamicSummary' cols='40' id='animated' name='dynamicSummary' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New summary</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: block; border: 0px solid; visibility: hidden; min-height: 41px; white-space: pre-wrap; line-height: 37px; text-decoration: none; letter-spacing: 0px; font-size: 18px; font-family: Actor; font-style: normal; font-weight: 400; text-transform: none; text-align: start; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px 18px; max-height: none;'><span>History summary 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'></div><br></div></div>" + "</div></form>"
 
         $('<div class="hiddenDiv" style="display:none">' + topic + summary + '</div>').appendTo('.editor').slideDown("slow");
 
         $(".dynExpanding").expanding();
         //alert(topicCount);
         $(".topicCount").html("Topics: " + topicCount)
+
+        // saving dynamic Summaries
+        summary.on('click', '.dynamicSummary', function(){ // because dynamic
+          $(this).bindWithDelay("keypress keydown", function(){
+
+            console.log('Focused on dyn. Summary');
+
+            }, 500, true);
+        })
+
+        // saving dynamic Topics
+        topic.on('click', '.dynamicTopic', function(){ // because dynamic
+          $(this).bindWithDelay("keypress keydown", function(){
+
+            console.log('Focused on dyn. Topic');
+
+            }, 500, true);
+        })
+
       }
     })
 
@@ -374,8 +400,8 @@ $(document).ready(function(){
 
       //alert($prevtxtarea.val()); // val after change
       
-      $(this).parents('.topic').next().fadeOut("slow", function() { $(this).remove(); });
-      $(this).parents('.topic').fadeOut("slow", function() { $(this).remove(); });  
+      $(this).parents('.topic').next().fadeOut("slow", function() { $(this).hide(); }); //remove
+      $(this).parents('.topic').fadeOut("slow", function() { $(this).hide(); }); //remove
 
     });
 
@@ -406,4 +432,27 @@ $(document).ready(function(){
 
 
 
+/*
 
+Internal Server Error: /app/history/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 25, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/eimantas/Desktop/Projects/Lynx/lynx/views.py", line 122, in App
+    t_formset = TopicFormSet(request.POST, queryset = tquery)
+  File "/usr/local/lib/python2.7/dist-packages/django/forms/models.py", line 441, in __init__
+    super(BaseModelFormSet, self).__init__(**defaults)
+  File "/usr/local/lib/python2.7/dist-packages/django/forms/formsets.py", line 56, in __init__
+    self._construct_forms()
+  File "/usr/local/lib/python2.7/dist-packages/django/forms/formsets.py", line 124, in _construct_forms
+    self.forms.append(self._construct_form(i))
+  File "/usr/local/lib/python2.7/dist-packages/django/forms/models.py", line 468, in _construct_form
+    kwargs['instance'] = self.get_queryset()[i]
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/query.py", line 198, in __getitem__
+    return self._result_cache[k]
+IndexError: list index out of range
+
+
+*/
