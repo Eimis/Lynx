@@ -179,21 +179,6 @@ def Topic_count(request, slug):
 		return HttpResponseRedirect('/dashboard/')
 
 
-@login_required(redirect_field_name=None)
-def New(request): # create new Topic and Summary
-	if request.method == 'POST' and request.is_ajax():
-		jsondata = request.read()
-		json_data = json.loads(jsondata)
-		new_topic = json_data["name"]
-		new_summary = json_data["content"]
-		topic = Topic(name = new_topic)
-		summary = Summary(content = new_summary)
-		topic.save()
-		summary.save()
-	else:
-		return HttpResponse("Something's wrong") # not possible?
-	return HttpResponse("You shouldn't see this")
-
 
 @login_required(redirect_field_name=None)
 def New_dynamic(request, slug): # create new DYNAMIC Topic and Summary 'in background'
@@ -294,10 +279,6 @@ def Remove_topic(request, slug, id):
 	else:
 		return HttpResponseRedirect('/dashboard/')
 
-def Save_static_topics(request):
-	if request.is_ajax:
-		test = "Request successfull (Django)"
-		return HttpResponse(test, mimetype='application/json')
 
 
 

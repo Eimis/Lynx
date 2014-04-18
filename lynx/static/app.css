@@ -15,7 +15,7 @@ a:hover{text-decoration: none;}
 
 html{
 /*background-image: url("/static/images/diamond_upholstery.png");*/
-background: url("http://127.0.0.1:8000/static/images/3.jpg") no-repeat center center fixed; 
+background: url("http://i.imgur.com/wufNsW1.jpg") no-repeat center center fixed; 
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -27,7 +27,7 @@ background: url("http://127.0.0.1:8000/static/images/3.jpg") no-repeat center ce
 
 body { 
 /*background-image: url("/static/images/diamond_upholstery.png");*/
-background: url("http://127.0.0.1:8000/static/images/3.jpg") no-repeat center center fixed; 
+background: url("http://i.imgur.com/wufNsW1.jpg") no-repeat center center fixed; 
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -203,7 +203,7 @@ p.midbar{
 }
 
 .leftbar{
-	background: url("images/topbar.png");
+	background: url("http://i.imgur.com/efRDYrM.png");
 	height: inherit;
 	padding-left: 0;
 	top:0;
@@ -269,7 +269,7 @@ p.midbar{
 	top:0;
 	padding-right:0;
 	padding-left:0;
-	background: url("images/topbar.png");
+	background: url("http://i.imgur.com/efRDYrM.png");
 	text-align: center;
 
 	display: inline-block;
@@ -287,7 +287,7 @@ p.midbar{
 
 .rightbar{
 	height: inherit;
-	background: url("images/topbar.png");
+	background: url("http://i.imgur.com/efRDYrM.png");
 	border-right: 1px solid #ccc;
 	top:0;
 

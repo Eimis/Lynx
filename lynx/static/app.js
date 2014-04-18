@@ -206,6 +206,7 @@ $(document).ready(function(){
 
   $('.topic_pk').hide()
   $('.summary_pk').hide()
+  $('.tests').hide()
 
   // saving static Topics
   $(".topicTextarea").bindWithDelay("keypress keydown", function(){
