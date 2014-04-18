@@ -1,3 +1,0 @@
-[submodule "docs/_themes/jsdoc-for-sphinx"]
-	path = docs/_themes/jsdoc-for-sphinx
-	url = https://github.com/jterrace/jsdoc-for-sphinx.git
