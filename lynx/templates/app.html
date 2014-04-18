@@ -27,20 +27,20 @@
 });-->
 
 <div class="topbar">
-		<!--************ 1 **********-->
+	<!--************ 1 **********-->
 
-		<div class="col-md-4 leftbar">
-			<a href="/dashboard/">
-				<span class="helper"></span>
-				<img alt="140x140" src="{{ STATIC_URL }}/images/ash2.png" class="img-thumbnail my_circle" />
-				
-			</a>
-			<a href="#">
-				
-			</a>
-		</div>
-		<!--************ 2 **********-->
-		<div class="col-md-4 midbar"><p class="midbar">{{ slug|capfirst }}</p><div class="stats"><p class="topicCount"></p></div><div class="stats" style="margin-left: 0;"><a href="#"><div class="custom_button green addNew"><i class="fa fa-plus deleteSubjectIcon"></i> Add new</div></div></div>
+	<div class="col-md-4 leftbar">
+		<a href="/dashboard/">
+			<span class="helper"></span>
+			<img alt="140x140" src="{{ STATIC_URL }}/images/temp_profile.png" class="img-thumbnail my_circle" />
+
+		</a>
+		<a href="#">
+
+		</a>
+	</div>
+	<!--************ 2 **********-->
+	<div class="col-md-4 midbar"><p class="midbar">{{ slug|capfirst }}</p><div class="stats"><p class="topicCount"></p></div><div class="stats" style="margin-left: 0;"><a href="#"><div class="custom_button green addNew"><i class="fa fa-plus deleteSubjectIcon"></i> Add new</div></div></div>
 	<!--************ 3 **********-->
 	<div class="col-md-4 rightbar topright">
 		<span class="helper"></span>
@@ -65,67 +65,83 @@
 			<div class="circle"></div>
 		</div>
 
-<form action = "http://127.0.0.1:8000/app/" method = "POST" class = "form">
-	{% csrf_token %}
-	<div class = "static">
-	<!-- t_formset.management_form -->
-	{{ t_formset.management_form }}
-	<!-- t_formset.management_form -->
-	{{ s_formset.management_form }}
-	<!-- formsets -->
-	{% for topic, summary in zipped %}
+
+		{% for topic, summary in zipped2 %}
+
+		<form action="http://127.0.0.1:8000/app/" method="POST" class="form">
+			<input type="hidden" name="csrfmiddlewaretoken" value="0gNNkg2mvgWtwOv5QE2BpNizKNSU7hmg">
+			<div class="static">
 
 
-
-	<div class="topic">{{ topic }}
-		<div class="buttons">
-
-			<a href="/app/remove_summary/{{ summary.instance.pk }}">
-			<div class="custom_button white removeSummary">
-				<i class="fa fa-times deleteSubjectIcon"></i>
-				Remove just this summary
-			</div>
-		</a>
-
-			<a href="/app/remove_topic/{{ slug }}/{{ topic.instance.pk }}">
-			<div class="custom_button white removeTopic" title="Remove topic">
-				<i class="fa fa-times deleteSubjectIcon"></i>
-				Remove topic
-			</div>
-		</a>
+				<!-- formsets -->
 
 
-		</div>
-	</div>
-	<div class="summaryContainer">
-	<div class = "summaryWrap"><p class = "topicDate">{{ topic.instance.date|date:'DATETIME_FORMAT'}}</p>
+				<div class="topic">
+					<div class="expanding-wrapper wtf" style="position:relative">
+						<div class ="topic_pk">{{ topic.pk }}</div>
+						<textarea class="topicTextarea expanding" cols="40" id="animated" name="Topic" rows="1" style="margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;"> {{ topic.name }} </textarea>
+					</div><input id="id_form-0-id" name="form-0-id" type="hidden" value="1">
+					<div class="buttons">
+
+						<a href="/app/remove_summary/{{ summary.pk }}">
+							<div class="custom_button white removeSummary">
+								<i class="fa fa-times deleteSubjectIcon"></i>
+								Remove just this summary
+							</div>
+						</a>
+
+						<a href="/app/remove_topic/{{ slug }}/{{ topic.pk }}">
+							<div class="custom_button white removeTopic" original-title="You can't remove initial topic">
+								<i class="fa fa-times deleteSubjectIcon"></i>
+								Remove topic
+							</div>
+						</a>
+
+
+					</div>
+				</div>
+				<div class="summaryContainer">
+					<div class="summaryWrap"><p class="topicDate">{{ topic.date|date:'DATETIME_FORMAT'}}</p>
 
 			<!--<input type="submit" value="Submit" class="mygt" />
-			<a href="/app/remove_topic/{{ topic.instance.pk }}"><p class="remove_topic">Remove topic</p></a>-->
+			<a href="/app/remove_topic/1"><p class="remove_topic">Remove topic</p></a>-->
 			<br>
-			<div class="summary">{{ summary }}</div>
-			<br>
-			<!--<input type="submit" value="Submit" class="mygt" />-->
-			
+			<div class="summary">
+				<div class="expanding-wrapper" style="position:relative">
+					<div class="summary_pk"> {{ summary.pk }} </div>
+					<textarea class="summaryTextarea expanding" cols="40" id="animated" name="Summary" rows="1" style="margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;">{{summary.content}} </textarea>
+				</div>
+				<input id="id_form-0-id" name="form-0-id" type="hidden" value="1"></div>
+				<br>
+				<!--<input type="submit" value="Submit" class="mygt" />-->
+
+			</div>
 		</div>
-	</div>
-			{% endfor %}
-			<br>
-		</form></div>
+
+		<br>
+	</div></form>
+
+	{% endfor %}
+
+	<!-- ************************************************************************8 -->
 
 
-	</div>
 
-	<div class="tests">
+
+
+
+</div>
+
+<div class="tests">
 	<b>Tests</b>:<br>
-		pk_list:
-		{{ pk_list }}<br>
-		Previous summary PK:
-		{{ prevSumPk }}<br>
+	pk_list:
+	{{ pk_list }}<br>
+	Previous summary PK:
+	{{ prevSumPk }}<br>
 
-		Subject list:{{ subject_list }}<br>
-		Test: {{ topics }}
-	</div>
+	Subject list:{{ subject_list }}<br>
+	Test: {{ topics }}
+</div>
 
 
 </div>

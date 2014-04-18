@@ -103,30 +103,21 @@ def App(request, slug):
 	lectures = user.lecture_set.all().count()
 	subject = Subject.objects.get(user=request.user, slug=slug) # from url
 	subjects = Subject.objects.filter(user=request.user)
-	topics = Topic.objects.filter(subject = subject.pk)
+	topics = Topic.objects.filter(subject = subject.pk).order_by('date')
 	topicCount = Topic.objects.filter(subject = subject.pk).count()
-	summaries = Summary.objects.filter(subject = subject.pk)
+	summaries = Summary.objects.filter(subject = subject.pk).order_by('date')
 	subject_list = []
 	for x in subjects:
 		subject_list.append(x.title.lower()) # slugs are all lowercased
-	TopicFormSet = modelformset_factory(Topic, form=TopicForm, extra=0, fields=('name',), can_delete=True)
-	SummaryFormSet = modelformset_factory(Summary, form=SummaryForm, extra=0, fields=('content',), can_delete=True)
+	TopicFormSet = modelformset_factory(Topic, form=TopicForm, extra=0, fields=('name',), can_delete=False)
+	SummaryFormSet = modelformset_factory(Summary, form=SummaryForm, extra=0, fields=('content',), can_delete=False)
 	tquery = user.topic_set.all().order_by('date')
 	squery = user.summary_set.all().order_by('date')
 	t_formset = TopicFormSet(queryset = topics)
 	s_formset = SummaryFormSet(queryset = summaries)
 	zipped = zip(t_formset.forms, s_formset.forms)
-	
-	# saving formsets:
-	if request.method == 'POST' and request.is_ajax():
-		Topic.objects.update()
-		Summary.objects.update()
-		t_formset = TopicFormSet(request.POST, queryset = user.topic_set.all())
-		s_formset = SummaryFormSet(request.POST, queryset = user.summary_set.all()) # formset instances
-		s_formset.save()
-		t_formset.save()
-
-	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery,   "subject_list" : subject_list, "slug" : slug, "topics" : topics, "topicCount" : topicCount, "domain" : domain, "subject" : subject})
+	zipped2 = zip(topics, summaries)
+	return render (request, "app.html", {"lectures" : lectures, "zipped" : zipped, "t_formset" : t_formset, "s_formset" : s_formset, "tquery" : tquery, "squery" : squery,   "subject_list" : subject_list, "slug" : slug, "topics" : topics, "topicCount" : topicCount, "domain" : domain, "subject" : subject, "zipped2" : zipped2})
 
 
 @login_required(redirect_field_name=None)
@@ -225,19 +216,32 @@ def New_dynamic(request, slug): # create new DYNAMIC Topic and Summary 'in backg
 
 
 
+
+
 @login_required(redirect_field_name=None)
-def Save_dynamic(request, slug):
+def Save_topic(request, slug, id):
 	User = get_user_model() # custom user
 	user = request.user
 	subject = Subject.objects.get(user = user, slug = slug)
-	topic = Topic.objects.get(user = user, subject = subject)
-	summary = Summary.objects.get(user, subject = subject, topic = topic)
+	topic = Topic.objects.get(user = user, subject = subject, pk = id)
 
-	topic.name = request.POST['dynamicTopic']
-	summary.content = request.POST['dynamicSummary']
-	topic.save()
-	summary.save()
-	return HttpResponse(subject) # 4 testing only
+	if request.method == 'POST' and request.is_ajax():
+		topic.name = request.POST['Topic']
+		topic.save()
+		return HttpResponse('Saved static topic') # 4 testing only
+
+
+@login_required(redirect_field_name=None)
+def Save_summary(request, slug, id):
+	User = get_user_model() # custom user
+	user = request.user
+	subject = Subject.objects.get(user = user, slug = slug)
+	summary = Summary.objects.get(user = user, subject = subject, pk = id)
+
+	if request.method == 'POST' and request.is_ajax():
+		summary.content = request.POST['Summary']
+		summary.save()
+		return HttpResponse('Saved static summary') # 4 testing only
 
 
 
@@ -294,4 +298,6 @@ def Save_static_topics(request):
 	if request.is_ajax:
 		test = "Request successfull (Django)"
 		return HttpResponse(test, mimetype='application/json')
+
+
 

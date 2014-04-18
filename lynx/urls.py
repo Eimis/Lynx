@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from lynx.views import  Hello, App, New, Remove_summary, Remove_topic, Dashboard, Login, Logout, New_subject, Remove_subject, Subject_count, Update_subject, Update_topic, New_dynamic, Topic_count, Save_static_topics
+from lynx.views import  Hello, App, New, Remove_summary, Remove_topic, Dashboard, Login, Logout, New_subject, Remove_subject, Subject_count, Update_subject, Update_topic, New_dynamic, Topic_count, Save_topic, Save_summary
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
@@ -12,7 +12,6 @@ urlpatterns = patterns('',
 	url(r'^app/$', App),
 
 	url(r'^dashboard/$', Dashboard),
-	url(r'^app/(?P<slug>[-\w]+)/save_static_topics/$', Save_static_topics),
 	url(r'^login/$', Login),
 	url(r'^logout/$', Logout),
 	url(r'^app/new/$', New),
@@ -26,6 +25,8 @@ urlpatterns = patterns('',
 	url(r'^update_topic/(?P<id>[-\w]+)/$', Update_topic),
 	url(r'^app/remove_summary/(?P<id>[-\w]+)/$', Remove_summary),
 	url(r'^app/remove_topic/(?P<slug>[-\w]+)/(?P<id>[-\w]+)/$', Remove_topic),
+	url(r'^app/save_topic/(?P<slug>[-\w]+)/(?P<id>[-\w]+)/$', Save_topic),
+	url(r'^app/save_summary/(?P<slug>[-\w]+)/(?P<id>[-\w]+)/$', Save_summary),
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^user/password/reset/$', # TODO: better url's
         'django.contrib.auth.views.password_reset', 

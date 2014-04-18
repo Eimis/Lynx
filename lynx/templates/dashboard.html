@@ -7,6 +7,8 @@
   <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
   <script src="{{ STATIC_URL }}jquery-ui-1.10.4.custom.js"></script>
   <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" content-type: "text/css/">
+  <script type='text/javascript' src='{{ STATIC_URL }}tipsy/javascripts/jquery.tipsy.js'></script>
+  <link rel="stylesheet" href="{{ STATIC_URL }}tipsy/stylesheets/tipsy.css" type="text/css" />
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" content-type: text/css>
   <script src="{{ STATIC_URL }}dashboard.js"></script>
   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
@@ -32,11 +34,11 @@
 
     <div class="col-md-6 profile">
       <div class="topbar"><p>Your profile</p></div>
-      <img alt="140x140" src="{{ STATIC_URL }}/images/ash2.png" class="img-thumbnail pic" />
+      <img alt="140x140" src="{{ STATIC_URL }}/images/temp_profile.png" class="img-thumbnail pic" original-title="Change profile pic"/>
 
       <br><a href="/logout/">Logout ({{ email }}) </a><br>
 
-      <a href="#" id="username2" data-type="text" data-pk="2" data-url="/post" data-title="Enter username"><p class="test">Username</p></a>
+      <!--<a href="#" id="username2" data-type="text" data-pk="2" data-url="/post" data-title="Enter username"><p class="test">Username</p></a>-->
 
      
 
@@ -49,7 +51,7 @@
 
       <div class="itemsWrap">
         <a href="#" class = "custom_button white subjectsButton">
-          <i class="fa fa-briefcase"> Subjects: <span style="color: #0074cc;" class="subjectCount">{{ subjectCount }}</span></i>
+          <i class="fa fa-briefcase"><p> Subjects:</p><span style="color: #0074cc;" class="subjectCount">{{ subjectCount }}</span></i>
         </a>
         <br>
         <br>

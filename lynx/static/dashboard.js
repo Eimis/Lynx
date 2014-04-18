@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 
 
-
+  $('.pic').tipsy({gravity: 'n'});
 
     $(".subjectsButton").click(function() {
         $(".subjects").toggle("slide", {direction: "up"});
@@ -58,7 +58,9 @@ $(document).ready(function(){
 
       e.stopPropagation(); /* do not slide down */
       $('#myModal2').modal('show');
-      $('.removeSubject').click(function(){
+      $('.removeSubject').click(function(event){
+            event.preventDefault();
+        
         $('#myModal2').modal('hide');
             $.ajax({
                 url: link,
@@ -67,7 +69,6 @@ $(document).ready(function(){
             })
 
 
-            event.preventDefault();
             $deleteSubjectIcon.parents(".small").animate(
             {
                 'margin-left':'1000px'
@@ -94,7 +95,7 @@ $(document).ready(function(){
                 type: "get",
                 success: console.log("Removed topic from dashboard. Link: " + link)
             })
-        event.preventDefault();
+        e.preventDefault();
     });
 
 

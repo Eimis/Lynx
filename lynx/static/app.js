@@ -59,7 +59,7 @@ $(document).ready(function(){
 });**/
 
 // update (submit) existing topic / lecture:
-$(document).ready(function(){
+$(document).ready(function(event){
 
   $(".mygt").click(function(){
         serializedData = $("form").serialize(); // to simple Jquery string object
@@ -202,25 +202,37 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 
+
+
+  $('.topic_pk').hide()
+  $('.summary_pk').hide()
+
   // saving static Topics
   $(".topicTextarea").bindWithDelay("keypress keydown", function(){
+    var domain = $(document).find('.domain').text()
     var subject = $(document).find('.subjectName').text()
-    serializedData = $("form").serialize();
+    var topicTextarea = $(this)
+    serializedData = topicTextarea.serialize();
+    var topicPk = parseInt(topicTextarea.parents('.wtf').find('.topic_pk').text())
     $.ajax({
-    url: domain + 'app/' + subject + '/',
+    url: domain + 'app/save_topic/' + subject + '/' + topicPk + '/',
     type: "post",
     data: serializedData,
     csrfmiddlewaretoken:'{{ csrf_token }}',
     success: console.log('Saved static topic')
   })
-    }, 500, true);
+    }, 1000, true);
 
   // saving static Summaries
   $(".summaryTextarea").bindWithDelay("keypress keydown", function(){
+    var domain = $(document).find('.domain').text()
     var subject = $(document).find('.subjectName').text()
-    serializedData = $("form").serialize();
+    var summaryTextarea = $(this)
+    serializedData = summaryTextarea.serialize();
+    var summaryPk = parseInt(summaryTextarea.parents('.summary').find('.summary_pk').text())
+    console.log(summaryPk)
     $.ajax({
-    url: domain + 'app/' + subject + '/',
+    url: domain + 'app/save_summary/' + subject + '/' + summaryPk + '/',
     type: "post",
     data: serializedData,
     csrfmiddlewaretoken:'{{ csrf_token }}',
@@ -229,15 +241,7 @@ $(document).ready(function(){
     }, 1000, true);
 
 
-  // saving dynamic Summaries
-  $(document).on('click', '.dynamicSummary', function(){ // because dynamic
-    $(this).bindWithDelay("keypress keydown", function(){
 
-
-    console.log('Focused on dyn. Summary');
-
-    }, 500, true);
-  })
 
 
 
@@ -270,7 +274,7 @@ $(document).ready(function(){
 
 
 
-  $('.addNew').click(function(){ // TODO - increment Topics number at the top / laikas
+  $(document).on('click', '.addNew', function(event){ // TODO - increment Topics number at the top / laikas
     event.preventDefault();
     var button = $(this);
     var token = document.getElementById('csrf_token').value;
@@ -288,35 +292,61 @@ $(document).ready(function(){
         var subject = $(document).find('.subjectName').text()
         var topicCount = responseData.topicCount;
         var topicDate = responseData.serialized_datetime;
-        var topic = "<form>" + token + "<div class='dynamic'><div class='topic'><div class='expanding-wrapper' style='position:relative'><textarea class='topicTextarea dynExpanding dynamicTopic' cols='40' id='animated' name='dynamicTopic' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New topic</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: none; border-width: 8px 0px 0px; border-style: solid; visibility: hidden; min-height: 50px; white-space: pre-wrap; line-height: 35.71428680419922px; text-decoration: none; letter-spacing: 0px; font-size: 25px; font-family: Arimo; font-style: normal; font-weight: 400; text-transform: none; text-align: center; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px; max-height: none;'><span>History topic 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'><div class='buttons'><a href='/app/remove_summary/" + dynamic_summary_id + "'><div class='custom_button white removeSummary dynamic'><i class='fa fa-times deleteSubjectIcon'></i>Remove just this summary</div></a><a href='/app/remove_topic/" + subject + "/" + dynamic_topic_id + " '><div class='custom_button white removeTopic dynamicTopicButton' title='Remove topic'><i class='fa fa-times deleteSubjectIcon'></i>Remove topic</div></a></div></div>"
-        var summary = "<div class='summaryContainer'><div class='summaryWrap'><p class='topicDate'>" + topicDate + "</p><!--<input type='submit' value='Submit' class='mygt' /><a href='/app/remove_topic/19'><p class='remove_topic'>Remove topic</p></a>--><br><div class='summary'><div class='expanding-wrapper' style='position:relative'><textarea class='summaryTextarea dynExpanding dynamicSummary' cols='40' id='animated' name='dynamicSummary' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New summary</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: block; border: 0px solid; visibility: hidden; min-height: 41px; white-space: pre-wrap; line-height: 37px; text-decoration: none; letter-spacing: 0px; font-size: 18px; font-family: Actor; font-style: normal; font-weight: 400; text-transform: none; text-align: start; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px 18px; max-height: none;'><span>History summary 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'></div><br></div></div>" + "</div></form>"
+        var topic = "<form>" + token + "<div class='dynamic'><div class='topic'><div class='expanding-wrapper' style='position:relative'><div class ='topic_pk'>" + dynamic_topic_id + "</div><textarea class='topicTextarea dynExpanding dynamicTopic' cols='40' id='animated' name='Topic' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New topic</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: none; border-width: 8px 0px 0px; border-style: solid; visibility: hidden; min-height: 50px; white-space: pre-wrap; line-height: 35.71428680419922px; text-decoration: none; letter-spacing: 0px; font-size: 25px; font-family: Arimo; font-style: normal; font-weight: 400; text-transform: none; text-align: center; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px; max-height: none;'><span>History topic 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'><div class='buttons'><a href='/app/remove_summary/" + dynamic_summary_id + "'><div class='custom_button white removeSummary removeDynamicSummary'><i class='fa fa-times deleteSubjectIcon'></i>Remove just this summary</div></a><a href='/app/remove_topic/" + subject + "/" + dynamic_topic_id + " '><div class='custom_button white removeTopic dynamicTopicButton' title='Remove topic'><i class='fa fa-times deleteSubjectIcon'></i>Remove topic</div></a></div></div>"
+        var summary = "<div class='summaryContainer'><div class='summaryWrap'><p class='topicDate'>" + topicDate + "</p><!--<input type='submit' value='Submit' class='mygt' /><a href='/app/remove_topic/19'><p class='remove_topic'>Remove topic</p></a>--><br><div class='summary'><div class='expanding-wrapper' style='position:relative'><div class='summary_pk'>" + dynamic_summary_id + "</div><textarea class='summaryTextarea dynExpanding dynamicSummary' cols='40' id='animated' name='Summary' rows='1' style='margin: 0px; box-sizing: border-box; width: 100%; position: absolute; top: 0px; left: 0px; height: 100%; resize: none;'>New summary</textarea><pre class='expanding-clone' style='margin: 0px; box-sizing: border-box; width: 100%; display: block; border: 0px solid; visibility: hidden; min-height: 41px; white-space: pre-wrap; line-height: 37px; text-decoration: none; letter-spacing: 0px; font-size: 18px; font-family: Actor; font-style: normal; font-weight: 400; text-transform: none; text-align: start; direction: ltr; word-spacing: 0px; word-wrap: break-word; word-break: normal; padding: 2px 18px; max-height: none;'><span>History summary 3</span><br></pre></div><input id='id_form-2-id' name='form-2-id' type='hidden' value='19'></div><br></div></div>" + "</div></form>"
+
 
         $('<div class="hiddenDiv" style="display:none">' + topic + summary + '</div>').appendTo('.editor').slideDown("slow");
 
         $(".dynExpanding").expanding();
-        //alert(topicCount);
+
         $(".topicCount").html("Topics: " + topicCount)
 
+        $('.topic_pk').hide()
+        $('.summary_pk').hide()
+
         // saving dynamic Summaries
-        summary.on('click', '.dynamicSummary', function(){ // because dynamic
-          $(this).bindWithDelay("keypress keydown", function(){
+        var dynamicSummary = $(document).find('.dynamicSummary:last')
 
-            console.log('Focused on dyn. Summary');
+        dynamicSummary.bindWithDelay("keypress keydown", function(){
 
-            }, 500, true);
-        })
+          var domain = $(document).find('.domain').text()
+          var subject = $(document).find('.subjectName').text()
+          serializedData = dynamicSummary.serialize();
+          var summaryPk = parseInt(dynamicSummary.parents('.summary').find('.summary_pk').text())
+          console.log(summaryPk)
 
-        // saving dynamic Topics
-        topic.on('click', '.dynamicTopic', function(){ // because dynamic
-          $(this).bindWithDelay("keypress keydown", function(){
+          $.ajax({
+            url: domain + 'app/save_summary/' + subject + '/' + summaryPk + '/',
+            type: "post",
+            data: serializedData,
+            csrfmiddlewaretoken:'{{ csrf_token }}',
+            success: console.log('Saved dynamic summary')
+          })
+        }, 500, true);
 
-            console.log('Focused on dyn. Topic');
+         // saving dynamic Topics
+        var dynamicTopic = $(document).find('.dynamicTopic:last')
 
-            }, 500, true);
-        })
+        dynamicTopic.bindWithDelay("keypress keydown", function(){
 
-      }
-    })
+          var domain = $(document).find('.domain').text()
+          var subject = $(document).find('.subjectName').text()
+          serializedData = dynamicTopic.serialize();
+          var topicPk = parseInt(dynamicTopic.parents('.topic').find('.topic_pk').text())
+          console.log(topicPk)
+
+          $.ajax({
+            url: domain + 'app/save_topic/' + subject + '/' + topicPk + '/',
+            type: "post",
+            data: serializedData,
+            csrfmiddlewaretoken:'{{ csrf_token }}',
+            success: console.log('Saved dynamic topic')
+          })
+        }, 500, true);
+
+      } // end success
+    }) // end ajax
 
 
 
@@ -324,13 +354,13 @@ $(document).ready(function(){
 
 
     //removing dynamic summaries:
-    $('html').on('click', '.dynamic', function(){
+    $(document).on('click', '.removeDynamicSummary', function(event){
       var button = $(this)
       var link = $(button).parent().attr("href") // TODO: mygtukas gi bus kitur
       $.ajax({
         url: link,
         type: "get",
-        success: console.log("Removed dynamic summary!")
+        success: console.log('Removed dynamic summary')
       })
       event.preventDefault();
       var $txtarea = $(this).parents(".topic").next().find('textarea');
@@ -341,7 +371,7 @@ $(document).ready(function(){
 
 
     // Removing dynamic topics:
-    $("html").on('click', '.dynamicTopicButton', function(){
+    $("html").on('click', '.dynamicTopicButton', function(event){
       var $removeButton = $(this) //remove_summary button
       var link = $($removeButton).parent().attr("href")
       $.ajax({
@@ -365,7 +395,7 @@ $(document).ready(function(){
       else{ // if dynamic
         var $txtarea = $removeButton.parents(".hiddenDiv").find('.summaryTextarea').val();
         var $prevtxtarea = $removeButton.parents('.hiddenDiv').prev().find('.summaryTextarea');
-        alert($prevtxtarea.val()); // before
+        //alert($prevtxtarea.val()); // before
         $prevtxtarea.val($prevtxtarea.val() + "\n" + $txtarea).change().effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
           $(this).parents('.hiddenDiv').fadeOut("slow", function() { $(this).remove(); });
 
@@ -378,7 +408,7 @@ $(document).ready(function(){
 
 
     // Removing static topics:
-    $(".removeTopic").click(function(){
+    $(".removeTopic").click(function(event){
       var $removeButton = $(this)
       var link = $($removeButton).parent().attr("href")
       $.ajax({
@@ -392,7 +422,7 @@ $(document).ready(function(){
       event.preventDefault();
 
       var $txtarea = $(this).parents(".topic").next().find('textarea').val();
-      var $prevtxtarea = $(this).parents('.topic').prev().find('.summaryTextarea');
+      var $prevtxtarea = $(this).parents('form').prev().find('.summaryTextarea');
 
       //alert($prevtxtarea.val()); // val be4 change
 
@@ -429,30 +459,3 @@ $(document).ready(function(){
 
   });
 
-
-
-
-/*
-
-Internal Server Error: /app/history/
-Traceback (most recent call last):
-  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 115, in get_response
-    response = callback(request, *callback_args, **callback_kwargs)
-  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 25, in _wrapped_view
-    return view_func(request, *args, **kwargs)
-  File "/home/eimantas/Desktop/Projects/Lynx/lynx/views.py", line 122, in App
-    t_formset = TopicFormSet(request.POST, queryset = tquery)
-  File "/usr/local/lib/python2.7/dist-packages/django/forms/models.py", line 441, in __init__
-    super(BaseModelFormSet, self).__init__(**defaults)
-  File "/usr/local/lib/python2.7/dist-packages/django/forms/formsets.py", line 56, in __init__
-    self._construct_forms()
-  File "/usr/local/lib/python2.7/dist-packages/django/forms/formsets.py", line 124, in _construct_forms
-    self.forms.append(self._construct_form(i))
-  File "/usr/local/lib/python2.7/dist-packages/django/forms/models.py", line 468, in _construct_form
-    kwargs['instance'] = self.get_queryset()[i]
-  File "/usr/local/lib/python2.7/dist-packages/django/db/models/query.py", line 198, in __getitem__
-    return self._result_cache[k]
-IndexError: list index out of range
-
-
-*/
