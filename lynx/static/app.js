@@ -425,13 +425,16 @@ $(document).ready(function(){
       var $prevtxtarea = $(this).parents('form').prev().find('.summaryTextarea');
 
       //alert($prevtxtarea.val()); // val be4 change
+      //alert($txtarea); // val be4 change
 
       $prevtxtarea.val($prevtxtarea.val() + "\n" + $txtarea).change().effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
 
       //alert($prevtxtarea.val()); // val after change
+      //alert($txtarea); // val be4 change
+
       
-      $(this).parents('.topic').next().fadeOut("slow", function() { $(this).hide(); }); //remove
-      $(this).parents('.topic').fadeOut("slow", function() { $(this).hide(); }); //remove
+      //$(this).parents('.topic').next().fadeOut("slow", function() { $(this).remove(); }); //remove
+      $(this).parents('form').fadeOut("slow", function() { $(this).remove(); }); //remove
 
     });
 
@@ -459,3 +462,8 @@ $(document).ready(function(){
 
   });
 
+
+
+
+//lt_LT.UTF-8
+//en-US.utf8
