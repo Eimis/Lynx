@@ -68,7 +68,7 @@
                         <i class="fa fa-envelope"></i>
 
 
-                        <form action = "http://127.0.0.1:8000/login/" method="POST" class="logForm">
+                        <form action = "/login/" method="POST" class="logForm">
                           {% csrf_token %}
                           <input name="email" class = "usernameInput" type="text" placeholder="awesome@jack.com"></input>
                         </div>
@@ -107,7 +107,7 @@
                         <div class="username">
                           <i class="fa fa-envelope"></i>
 
-                          <form class = "regForm" action = "http://127.0.0.1:8000/" method = 'POST'>
+                          <form class = "regForm" action = "/" method = 'POST'>
                             {% csrf_token %}
                             {{ form.email }}
 
