@@ -7,7 +7,7 @@
 import os
 import django
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__)) # mano tagas
 
