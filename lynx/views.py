@@ -172,9 +172,10 @@ def Topic_count(request, slug):
 	slug = slug
 	subject = Subject.objects.get(user=request.user, slug=slug)
 	topicCount = Topic.objects.filter(user = user, subject = subject).count()
+	response = HttpResponse(simplejson.dumps({'topicCount': topicCount}), mimetype='application/json')
+	response['Access-Control-Allow-Origin'] = "*"
 	if request.is_ajax():
-		json = simplejson.dumps({'topicCount': topicCount})
-		return HttpResponse(json, mimetype='application/json')
+		return response
 	else:
 		return HttpResponseRedirect('/dashboard/')
 
