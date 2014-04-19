@@ -171,13 +171,19 @@ def Topic_count(request, slug):
 	user = request.user
 	slug = slug
 	subject = Subject.objects.get(user=request.user, slug=slug)
-	topicCount = Topic.objects.filter(user = user, subject = subject).count()
-	response = HttpResponse(simplejson.dumps({'topicCount': topicCount}), mimetype='application/json')
-	response['Access-Control-Allow-Origin'] = "*"
+	topicCount = int(Topic.objects.filter(user = user, subject = subject).count())
 	if request.is_ajax():
+		response = HttpResponse(simplejson.dumps({'topicCount': topicCount}),mimetype='application/json')
+		response['Access-Control-Allow-Origin'] = "*"
 		return response
+	elif request.method == "OPTIONS":
+		response = HttpResponse("")
+		response['Access-Control-Allow-Origin'] = "*"
+		response['Access-Control-Allow-Methods'] = "POST, OPTIONS"
+		response['Access-Control-Allow-Headers'] = "X-Requested-With"
+		response['Access-Control-Max-Age'] = "1800"
 	else:
-		return HttpResponseRedirect('/dashboard/')
+		return HttpResponseBadRequest()
 
 
 
