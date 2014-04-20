@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-
+    $('.errors').hide()
 
   $('.pic').tipsy({gravity: 'n'});
 

@@ -469,3 +469,102 @@ $(document).ready(function(){
 //lt_LT.UTF-8
 //en-US.utf8
 
+/*
+(ENV)eimantas@lynx://usr/share/nginx/Lynx/lynx/lynx$ Internal Server Error: /app/history/topic_count/
+Traceback (most recent call last):
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "//usr/share/nginx/Lynx/lynx/lynx/views.py", line 173, in Topic_count
+    subject = Subject.objects.get(user=request.user, slug=slug)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/manager.py", line 143, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/query.py", line 379, in get
+    clone = self.filter(*args, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/query.py", line 655, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/query.py", line 673, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/query.py", line 1266, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/query.py", line 1197, in add_filter
+    connector)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/where.py", line 71, in add
+    value = obj.prepare(lookup_type, value)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/where.py", line 339, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/related.py", line 143, in get_prep_lookup
+    return self._pk_trace(value, 'get_prep_lookup', lookup_type)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/related.py", line 216, in _pk_trace
+    v = getattr(field, prep_func)(lookup_type, v, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/__init__.py", line 322, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/__init__.py", line 555, in get_prep_value
+    return int(value)
+TypeError: int() argument must be a string or a number, not 'SimpleLazyObject'
+Internal Server Error: /app/history/topic_count/
+Traceback (most recent call last):
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "//usr/share/nginx/Lynx/lynx/lynx/views.py", line 173, in Topic_count
+    subject = Subject.objects.get(user=request.user, slug=slug)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/manager.py", line 143, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/query.py", line 379, in get
+    clone = self.filter(*args, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/query.py", line 655, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/query.py", line 673, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/query.py", line 1266, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/query.py", line 1197, in add_filter
+    connector)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/where.py", line 71, in add
+    value = obj.prepare(lookup_type, value)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/where.py", line 339, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/related.py", line 143, in get_prep_lookup
+    return self._pk_trace(value, 'get_prep_lookup', lookup_type)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/related.py", line 216, in _pk_trace
+    v = getattr(field, prep_func)(lookup_type, v, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/__init__.py", line 322, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/__init__.py", line 555, in get_prep_value
+    return int(value)
+TypeError: int() argument must be a string or a number, not 'SimpleLazyObject'
+Internal Server Error: /app/history/topic_count/
+Traceback (most recent call last):
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "//usr/share/nginx/Lynx/lynx/lynx/views.py", line 173, in Topic_count
+    subject = Subject.objects.get(user=request.user, slug=slug)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/manager.py", line 143, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/query.py", line 379, in get
+    clone = self.filter(*args, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/query.py", line 655, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/query.py", line 673, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/query.py", line 1266, in add_q
+    can_reuse=used_aliases, force_having=force_having)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/query.py", line 1197, in add_filter
+    connector)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/where.py", line 71, in add
+    value = obj.prepare(lookup_type, value)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/sql/where.py", line 339, in prepare
+    return self.field.get_prep_lookup(lookup_type, value)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/related.py", line 143, in get_prep_lookup
+    return self._pk_trace(value, 'get_prep_lookup', lookup_type)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/related.py", line 216, in _pk_trace
+    v = getattr(field, prep_func)(lookup_type, v, **kwargs)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/__init__.py", line 322, in get_prep_lookup
+    return self.get_prep_value(value)
+  File "/home/eimantas/Projects/ENV/local/lib/python2.7/site-packages/django/db/models/fields/__init__.py", line 555, in get_prep_value
+    return int(value)
+TypeError: int() argument must be a string or a number, not 'SimpleLazyObject'
+
+
+
+
+*/

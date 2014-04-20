@@ -436,3 +436,7 @@ a.editable-click:hover {
 	padding: 0;
 }
 
+.fa-briefcase p{
+	font: "Arial, Helvetica, sans-serif";
+	font-size: 14px;
+}

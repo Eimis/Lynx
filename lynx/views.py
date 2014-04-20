@@ -58,7 +58,7 @@ def Hello(request):
 		return render(request, "hello.html",{"form" : form})
 
 
-@login_required
+@login_required(redirect_field_name=None)
 def Dashboard(request):
 	user = request.user
 	email = user.email
@@ -128,7 +128,7 @@ def New_subject(request):
 	new_subject.save()
 	topic = Topic(user = user, subject = new_subject, name = "Your first topic")
 	topic.save()
-	summary = Summary(user = user, subject = new_subject, topic = topic, content = "This is your very first summary.")
+	summary = Summary(user = user, subject = new_subject, topic = topic, content = "This is your very first Summary. In Lynx, Topics and Summaries are saved automatically, so you don't have to worry about that.")
 	summary.save()
 	return HttpResponseRedirect("/dashboard/")
 
@@ -143,7 +143,7 @@ def Remove_subject(request, id):
 
 
 
-
+@login_required(redirect_field_name=None)
 def Update_subject(request, id): # dashboard
 	User = get_user_model() # custom user
 	user = request.user
@@ -153,6 +153,7 @@ def Update_subject(request, id): # dashboard
 	subject.save()
 	return HttpResponse(subject) # 4 testing only
 
+@login_required(redirect_field_name=None)
 def Update_topic(request, id): # dashboard
 	User = get_user_model() # custom user
 	user = request.user
@@ -162,17 +163,19 @@ def Update_topic(request, id): # dashboard
 	topic.save()
 	return HttpResponse("ok") # 4 testing only
 
+@login_required(redirect_field_name=None)
 def Subject_count(request):
 	user = request.user
 	subjectCount = user.subject_set.count()
 	return HttpResponse(simplejson.dumps(subjectCount), mimetype='application/json')
 
+@login_required(redirect_field_name=None)
 def Topic_count(request, slug):
 	user = request.user
 	slug = slug
 	subject = Subject.objects.get(user=request.user, slug=slug)
 	topicCount = int(Topic.objects.filter(user = user, subject = subject).count())
-	if request.is_ajax():
+	if request.is_ajax(): # todo: veikia ir be sito?
 		response = HttpResponse(simplejson.dumps({'topicCount': topicCount}),mimetype='application/json')
 		response['Access-Control-Allow-Origin'] = "*"
 		return response
