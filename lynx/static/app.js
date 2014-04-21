@@ -386,14 +386,14 @@ $(document).ready(function(){
       })
       event.preventDefault();
 
-      if ($removeButton.parents('.hiddenDiv').prev().is('form')){ // if static
+      if ($removeButton.parents('.hiddenDiv').prev().is('form')){ // if prev is static
         var $txtarea = $removeButton.parents(".hiddenDiv").find('.summaryTextarea').val();
-        var $prevtxtarea = $removeButton.parents('.editor').find('.static').find('.summaryTextarea:last');
+        var $prevtxtarea = $removeButton.parents('.editor').find('.static:last').find('.summaryTextarea:last');
         $prevtxtarea.val($prevtxtarea.val() + "\n" + $txtarea).change().effect("highlight", {color: "rgba(66, 139, 202, 0.4"}, 1500);
          $(this).parents('.hiddenDiv').fadeOut("slow", function() { $(this).remove(); });  
 
        }
-      else{ // if dynamic
+      else{ // if prev is dynamic
         var $txtarea = $removeButton.parents(".hiddenDiv").find('.summaryTextarea').val();
         var $prevtxtarea = $removeButton.parents('.hiddenDiv').prev().find('.summaryTextarea');
         //alert($prevtxtarea.val()); // before
