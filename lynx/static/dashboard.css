@@ -312,6 +312,8 @@ a.editable-click:hover {
 
 .topics{
 	margin-top: 3em;
+	width: 90%;
+	margin: 3em auto;
 }
 
 .topics table td{

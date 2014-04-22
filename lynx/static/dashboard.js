@@ -8,11 +8,10 @@ $(document).ready(function(){
         $(".subjects").toggle("slide", {direction: "up"});
     });
 
-    $(".small").children(".topics").hide()
-
+    $(".small").next(".topics").hide()
 
     $(".small").click(function() {
-        $(this).children(".topics").toggle("slide", {direction: "up"});
+        $(this).next(".topics").toggle("slide", {direction: "up"});
     });
 
     $(".subject_editable").click(function(e) { //no 'slide' when submitting 'editlive'
@@ -68,19 +67,35 @@ $(document).ready(function(){
                 success: console.log("Removed subject from dashboard. Link: " + link)
             })
 
-
+            $(function () {
             $deleteSubjectIcon.parents(".small").animate(
             {
-                'margin-left':'1000px'
+                'margin-left':'1000px', duration: 1000, queue: false,
                             // to move it towards the right and, probably, off-screen.
-                        },1000,
+                        },
                         function(){
                             $(this).slideUp('fast');
                             // once it's finished moving to the right, just 
                             // removes the the element from the display, you could use
                             // `remove()` instead, or whatever.
                         }
-                        );
+            );
+
+            $deleteSubjectIcon.parents(".small").next('.topics').animate(
+            {
+                'margin-left':'1000px', duration: 1000, queue: false,
+                            // to move it towards the right and, probably, off-screen.
+                        },
+                        function(){
+                            $(this).slideUp('fast');
+                            // once it's finished moving to the right, just 
+                            // removes the the element from the display, you could use
+                            // `remove()` instead, or whatever.
+                        }
+            );
+
+        });
+
             $(".subjectCount").html(number - 1)
         })
 

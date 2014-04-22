@@ -40,7 +40,7 @@
 
       <!--<a href="#" id="username2" data-type="text" data-pk="2" data-url="/post" data-title="Enter username"><p class="test">Username</p></a>-->
 
-     
+      
 
       
 
@@ -51,7 +51,7 @@
 
       <div class="itemsWrap">
         <a href="#" class = "custom_button white subjectsButton">
-          <i class="fa fa-briefcase"></i><p> Subjects:</p><span style="color: #0074cc;" class="subjectCount">{{ subjectCount }}</span>
+          <i class="fa fa-briefcase"></i><p> Subjects: </p><span style="color: #0074cc;" class="subjectCount">{{ subjectCount }}</span>
         </a>
         <br>
         <br>
@@ -79,36 +79,38 @@
             </div>
             <a href="#" class="subject_editable" data-type="text" data-pk="{{ subject.pk }}" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" data-url="{{ domain }}update_subject/{{ subject.pk }}/" data-title="Rename subject" class="editable-link" highlight: "#428bca">
               
-                <div class="subject_wrap"><p>{{ subject.title }}</p></div>
+              <div class="subject_wrap"><p>{{ subject.title }}</p></div>
               
             </a>
             
+            
+
+
+            
+            
+
+          </div>
           
 
-
-            <div class="topics">
+          <div class="topics">
 
               <a href = "/app/{{ subject.slug }}/" target="_blank"><div class="custom_button green visitApp"><i class="glyphicon glyphicon-circle-arrow-right proceed"></i> Proceed to web app</div></a>
               <hr class="line"><br>
 
               {% for topic in subject.topic_set.all %}
-               <table style="width:300px">
+              <table style="width:300px">
                 <tr>
                   <td class="table_topics"><a href="http://google.lt" class="topicEditable" data-type="textarea" data-pk="{{ topic.pk }}" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" data-url="{{ domain }}update_topic/{{ topic.pk }}/" data-title="Update topic" class="editable-link"><p class="topic">{{ topic.name }}</p></a></td>
                   <td class="table_buttons"><a data-toggle="modal" href="#myModal2"><i class="glyphicon glyphicon-pencil edit"></i></a><a href = "{{ domain }}remove_topic_d/{{ topic.pk }}"><i class="glyphicon glyphicon-remove delete"></a></td>    
                 </tr>
 
-              </table></p><br>
+              </table></p>{% endfor %}<br>
 
-
-
-              {% endfor %}
             </div>
 
-          </div>
+            
+
           {% endfor %}
-
-
 
         </div>
 
@@ -117,77 +119,77 @@
 
 
         
-  
+        
 
 
 
-      <!-- Button HTML (to Trigger Modal) -->
+        <!-- Button HTML (to Trigger Modal) -->
 
 
-      <!-- Modal start-->
+        <!-- Modal start-->
 
-      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">New subject</h4>
-            </div>
-            <div class="modal-body">
-              Please enter a name for a new <b>Subject</b>. This is a basic, top-level object in Lynx, from which you will be able to create <b>Topics</b> and their corresponding <b>Summaries</b>. A good subject name,for example, would be "Cultural history", "Antropology", "Market research" or "Introduction to data mining methods in Python" or similar.<br><br>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">New subject</h4>
+              </div>
+              <div class="modal-body">
+                Please enter a name for a new <b>Subject</b>. This is a basic, top-level object in Lynx, from which you will be able to create <b>Topics</b> and their corresponding <b>Summaries</b>. A good subject name,for example, would be "Cultural history", "Antropology", "Market research" or "Introduction to data mining methods in Python" or similar.<br><br>
 
-              <form action = "/new_subject/" method="POST" class="new_subject_form">
-                {% csrf_token %}
-              <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
-                <input type="text" class="form-control new_subject_form" placeholder="Subject title" name="subject_title">
+                <form action = "/new_subject/" method="POST" class="new_subject_form">
+                  {% csrf_token %}
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
+                    <input type="text" class="form-control new_subject_form" placeholder="Subject title" name="subject_title">
+                  </div>
+
+
+                  
+                  
+
+
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary new_subject_button">Create new subject</button>
+                </form>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <!-- Modal end -->
+
+        <!-- Modal 2 start-->
+
+        <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Remove subject</h4>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to proceed ? All <b>Topics</b> and <b>Summaries</b> that are related to this Subject will also be removed and the change is irreversible.
+
+                
+
+
               </div>
 
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary removeSubject">Remove subject</button>
+                
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
-      
-            
-
-
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary new_subject_button">Create new subject</button>
-            </form>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-
-      <!-- Modal end -->
-
-  <!-- Modal 2 start-->
-
-      <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Remove subject</h4>
-            </div>
-            <div class="modal-body">
-              Are you sure you want to proceed ? All <b>Topics</b> and <b>Summaries</b> that are related to this Subject will also be removed and the change is irreversible.
-
-               
-
-
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary removeSubject">Remove subject</button>
-            
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-
-      <!-- Modal 2 end -->
+        <!-- Modal 2 end -->
 
 
 
@@ -196,18 +198,18 @@
 
 
 
+
+      </div>
 
     </div>
 
+
+    <br><hr class="footerLine">
+
   </div>
 
-
-<br><hr class="footerLine">
-
-</div>
-
-<hr class="line">
-<div class="footer"><p>Help</p></div>
+  
+  <div class="footer"><p>Help</p></div>
 
 </body>
 
