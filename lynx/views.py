@@ -1,4 +1,5 @@
 #ssh -p 25001 eimantas@95.85.34.87
+# test
 from django.conf import settings
 from django.shortcuts import render, render_to_response
 from django import forms
@@ -70,11 +71,7 @@ def Dashboard(request):
 	topics = user.topic_set.all().order_by('-date')
 	current_site = Site.objects.get_current()
 	domain = current_site.domain
-
-
-	b = os.getcwd()
-
-	return render(request, "dashboard.html",{"email" : email, "subjectCount" : subjectCount, "subjects" : subjects, "topics" : topics, "user" : user, "domain" : domain, "b" : b})
+	return render(request, "dashboard.html",{"email" : email, "subjectCount" : subjectCount, "subjects" : subjects, "topics" : topics, "user" : user, "domain" : domain,})
 	
 
 def Login(request):
