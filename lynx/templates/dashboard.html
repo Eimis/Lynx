@@ -40,7 +40,7 @@
 
       <!--<a href="#" id="username2" data-type="text" data-pk="2" data-url="/post" data-title="Enter username"><p class="test">Username</p></a>-->
 
-      
+
 
       
 
@@ -78,15 +78,15 @@
               </a>
             </div>
             <a href="#" class="subject_editable" data-type="text" data-pk="{{ subject.pk }}" data-params="{csrfmiddlewaretoken:'{{csrf_token}}'}" data-url="{{ domain }}update_subject/{{ subject.pk }}/" data-title="Rename subject" class="editable-link" highlight: "#428bca">
-              
+
               <div class="subject_wrap"><p>{{ subject.title }}</p></div>
               
             </a>
             
-            
 
 
-            
+
+
             
 
           </div>
@@ -95,7 +95,7 @@
           <div class="topics">
 
               <a href = "/app/{{ subject.slug }}/" target="_blank"><div class="custom_button green visitApp"><i class="glyphicon glyphicon-circle-arrow-right proceed"></i> Proceed to web app</div></a>
-              <hr class="line"><br>
+              <hr class="line">
 
               {% for topic in subject.topic_set.all %}
               <table style="width:300px">
@@ -104,7 +104,7 @@
                   <td class="table_buttons"><a data-toggle="modal" href="#myModal2"><i class="glyphicon glyphicon-pencil edit"></i></a><a href = "{{ domain }}remove_topic_d/{{ topic.pk }}"><i class="glyphicon glyphicon-remove delete"></a></td>    
                 </tr>
 
-              </table></p>{% endfor %}<br>
+              </table></p>{% endfor %}
 
             </div>
 
@@ -119,7 +119,7 @@
 
 
         
-        
+
 
 
 
@@ -146,8 +146,8 @@
                   </div>
 
 
-                  
-                  
+
+
 
 
                 </div>
@@ -175,7 +175,7 @@
               <div class="modal-body">
                 Are you sure you want to proceed ? All <b>Topics</b> and <b>Summaries</b> that are related to this Subject will also be removed and the change is irreversible.
 
-                
+
 
 
               </div>
@@ -183,7 +183,7 @@
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary removeSubject">Remove subject</button>
-                
+
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
