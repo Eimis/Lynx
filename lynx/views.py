@@ -33,6 +33,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.db import transaction, connection
 
+import os
+
 
 
 def Hello(request):
@@ -68,7 +70,11 @@ def Dashboard(request):
 	topics = user.topic_set.all().order_by('-date')
 	current_site = Site.objects.get_current()
 	domain = current_site.domain
-	return render(request, "dashboard.html",{"email" : email, "subjectCount" : subjectCount, "subjects" : subjects, "topics" : topics, "user" : user, "domain" : domain})
+
+
+	b = os.getcwd()
+
+	return render(request, "dashboard.html",{"email" : email, "subjectCount" : subjectCount, "subjects" : subjects, "topics" : topics, "user" : user, "domain" : domain, "b" : b})
 	
 
 def Login(request):

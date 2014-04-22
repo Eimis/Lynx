@@ -7,6 +7,9 @@
 import os
 import django
 
+
+from dev_settings import *
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__)) # mano tagas
@@ -19,17 +22,7 @@ MANAGERS = ADMINS
 
 AUTH_USER_MODEL = 'lynx.CustomUser'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'lynxdb',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': 'eimantas',
-        'PASSWORD': 'maxmaxkit',
-        'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
-    }
-}
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
