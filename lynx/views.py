@@ -1,5 +1,4 @@
 #ssh -p 25001 eimantas@95.85.34.87
-# test
 from django.conf import settings
 from django.shortcuts import render, render_to_response
 from django import forms
