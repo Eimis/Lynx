@@ -9,7 +9,7 @@ from django.template.defaultfilters import slugify
 # *** Custom User model manager
 
 from django.contrib.auth.models import BaseUserManager
-
+ 
 class CustomUserManager(BaseUserManager):
 
     def _create_user(self, email, password,
