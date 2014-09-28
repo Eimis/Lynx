@@ -293,6 +293,6 @@ def Remove_topic(request, slug, id):
 	else:
 		return HttpResponseRedirect('/dashboard/')
 
-
+# test
 
 
